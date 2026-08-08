@@ -1,0 +1,24 @@
+# Termux command
+#
+# pkg add git python proot
+# git clone https://github.com/indigo-dc/udocker.git
+# (cd udocker/udocker; ln -s maincmd.py udocker)
+# export PATH=~/udocker/udocker:$PATH
+# export use_proot_executable=$(which proot)
+# export proot_link2symlink=True
+# udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/fado/:/var/www/html/" kalilinux/kali-rolling:latest /bin/bash
+#
+version: '3'
+services:
+  php:
+    image: kalilinux/kali-rolling:latest
+    command: "sh /var/www/html/docker/deploy-forky.sh"
+    environment:
+      ROOT: "/var/www/html"
+    ports:
+      - 2080:2080
+      - 80:80
+      - 443:443
+    volumes:
+      - ~/fado:/var/www/html/
+      - ~/ssl:/var/www/ssl/
