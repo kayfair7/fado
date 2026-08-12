@@ -1,49 +1,55 @@
 #!/bin/bash
 #
-# udocker run --entrypoint="/bin/busybox sh" --volume="/data/data/com.termux/files/home/git/fado/:/var/www/localhost/htdocs" alpine:latest
+# udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/git/fado/:/var/www/localhost/htdocs" alpine:latest /bin/busybox sh
 # cd /var/www/localhost/htdocs/docker
 # busybox sh deploy-alpine.sh
 
-export XDG_RUNTIME_DIR=/run/$(id -u)
 echo "nameserver 8.8.4.4" > /etc/resolv.conf
-mkdir -p /run/openrc/
-touch /run/openrc/softlevel
-mkdir -p /run/0/openrc
-touch /run/0/openrc/softlevel
+export XDG_RUNTIME_DIR=/run/$(id -u)
+mkdir -p "$XDG_RUNTIME_DIR/openrc/"
+touch "$XDG_RUNTIME_DIR/openrc/softlevel"
+mkdir -p "$XDG_RUNTIME_DIR/0/openrc"
+touch "$XDG_RUNTIME_DIR/0/openrc/softlevel"
 adduser -D apache
 adduser -D memcached
 adduser -D mariadb
 adduser -D mysql
+adduser -D fcgiwrap
+adduser -D rngd
 
 cwd=$(dirname "$PWD")
 
 if [ -f /var/www/isdeployed ]; then
     mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
+    /etc/init.d/rngd -U restart
+    /etc/init.d/fcgiwrap -U restart
     /etc/init.d/apache2 -U restart
     /etc/init.d/mariadb -U restart
-    /etc/init.d/php-fpm84 -U restart
+    /etc/init.d/php-fpm85 -U restart
     /etc/init.d/memcached -U restart
+    /etc/init.d/rngd -U status
+    /etc/init.d/fcgiwrap -U status
     /etc/init.d/apache2 -U status
     /etc/init.d/mariadb -U status
-    /etc/init.d/php-fpm84 -U status
+    /etc/init.d/php-fpm85 -U status
     /etc/init.d/memcached -U status
     rc-service -l -s -U
-    rc-status -a -U
+    rc-status -s -l -U
     tail -f /var/log/apache2/access.log
     exit 0
 fi
 
 echo "Download & install packages"
 
-apk add openrc udev-init-scripts-openrc s6 apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached htop nano musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-tools apache2-http2 apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php84-apache2
+apk add openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc
 
-chown -R apache $cwd/*
-chmod -R 770 $cwd/*
+#chown -Rvf apache:apache $cwd/*
+#chmod -Rvf 770 $cwd/*
 
 echo "Start & prepare MariaDB"
 
-chown -R mysql /var/lib/mysql/*
-chmod -R 770 /var/lib/mysql/*
+#chown -Rvf mysql /var/lib/mysql/*
+#chmod -Rvf 770 /var/lib/mysql/*
 mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
 /etc/init.d/mariadb -U setup
 /etc/init.d/mariadb -U start
@@ -73,14 +79,38 @@ sed -i -e 's/#LoadModule rewrite_module/LoadModule rewrite_module/g' /etc/apache
 sed -i -e 's/LoadModule mpm_worker_module/#LoadModule mpm_worker_module/g' /etc/apache2/httpd.conf
 sed -i -e 's/LoadModule mpm_event_module/#LoadModule mpm_event_module/g' /etc/apache2/httpd.conf
 sed -i -e 's/#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/g' /etc/apache2/httpd.conf
-sed -i -e 's/#Mutex default:\/run\/apache2/Mutex posixsem/g'/etc/apache2/httpd.conf
+sed -i -e 's/# Mutex default:\/run\/apache2/Mutex file:\/run\/apache2/g' /etc/apache2/httpd.conf
+sed -i -e 's/Listen 80/Listen 2080/g' /etc/apache2/httpd.conf
+
+rm /etc/apache2/conf.d/mod_fcgid.conf
+
+cat <<EOF >> /etc/apache2/conf.d/mod_fcgid.conf 
+AddHandler fcgid-script fcg fcgi fpl
+
+<IfModule mod_fcgid>
+    <Files ~ "\.php$">
+        Options +ExecCGI
+        SetHandler fcgid-script
+        Allow from all
+        FcgidWrapper "/usr/bin/fcgiwrap" .php
+     </Files>
+     <Files ~ "\.phtml$">
+        Options +ExecCGI
+        SetHandler fcgid-script
+        Allow from all
+        FcgidWrapper "/usr/bin/fcgiwrap" .phtml
+     </Files>
+</IfModule>
+EOF
 
 rm /etc/apache2/conf.d/default.conf
+
+rm /etc/apache2/conf.d/fado.conf
 
 cat <<EOF >> /etc/apache2/conf.d/fado.conf
 
 DirectoryIndex index.php index.html
-LoadModule php_module /var/www/modules/mod_php84.so
+LoadModule php_module /var/www/modules/mod_php85.so
 ServerName fado.org
 
 <VirtualHost _default_:2080>
@@ -93,11 +123,6 @@ ServerName fado.org
             Header set Access-Control-Allow-Credentials "true"
             Header set Access-Control-Max-Age "3600"
         </IfModule>
-
-        <FilesMatch "\.(php|phtml)$">
-            SetHandler application/x-httpd-php
-            SetHandler "proxy:fcgi://127.0.0.1:9000"
-        </FilesMatch>
 
         <IfModule mod_ssl.c>
             <IfModule mod_rewrite.c>
@@ -132,11 +157,6 @@ ServerName fado.org
             Header set Access-Control-Allow-Credentials "true"
         </IfModule>
 
-        <FilesMatch "\.(php|phtml)$">
-            SetHandler application/x-httpd-php
-            SetHandler "proxy:fcgi://127.0.0.1:9000"
-        </FilesMatch>
-
         <IfModule mod_rewrite.c>
             RewriteEngine on
             RewriteCond %{REQUEST_FILENAME} !-d
@@ -161,18 +181,24 @@ EOF
 
 rm /var/www/localhost/htdocs/index.html
 rm /etc/apache2/conf.d/ssl.conf
+rm /etc/apache2/conf.d/http2.conf
+rm /etc/apache2/conf.d/php*
 
+/etc/init.d/rngd -U restart
+/etc/init.d/fcgiwrap -U restart
 /etc/init.d/apache2 -U restart
-/etc/init.d/php-fpm84 -U restart
+/etc/init.d/php-fpm85 -U restart
 /etc/init.d/memcached -U restart
 
+/etc/init.d/rngd -U status
+/etc/init.d/fcgiwrap -U status
 /etc/init.d/apache2 -U status
 /etc/init.d/mariadb -U status
-/etc/init.d/php-fpm84 -U status
+/etc/init.d/php-fpm85 -U status
 /etc/init.d/memcached -U status
 
 rc-service -l -s -U
-rc-status -a -U
+rc-status -s -l -U
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
