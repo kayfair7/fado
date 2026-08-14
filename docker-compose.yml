@@ -4,6 +4,8 @@
 # git clone https://github.com/indigo-dc/udocker.git
 # (cd udocker/udocker; ln -s maincmd.py udocker)
 # export PATH=~/udocker/udocker:$PATH
+# export UDOCKER_TARBALL=https://download.a.incd.pt/udocker/udocker-englib-1.2.11.tar.gz
+# udocker install
 # export use_proot_executable=$(which proot)
 # export proot_link2symlink=True
 # udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/fado/:/var/www/html/" kalilinux/kali-rolling:latest /bin/bash
