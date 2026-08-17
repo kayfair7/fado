@@ -42,17 +42,48 @@ fi
 
 echo "Download & install packages"
 
-apk add openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd alpine-conf sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd linux-stable
+apk add openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd alpine-conf sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd linux-stable alpine-conf libnfnetlink mdevd abuild bc binutils build-base cmake gcc ncurses-dev ca-certificates wget
 
-setup-alpine
+export KERNELVER=9.4.9
+wget -nv -P /srv https://www.kernel.org/pub/linux/kernel/v4.x/linux-$KERNELVER.tar.gz
+tar -C /srv -zxf /srv/linux-$KERNELVER.tar.gz
+rm -f /srv/linux-$KERNELVER.tar.gz
+cd /srv/linux-$KERNELVER
+make defconfig
+([ ! -f /proc/1/root/proc/config.gz ] || zcat /proc/1/root/proc/config.gz > .config) 
+echo 'CONFIG_USB=m' >> .config
+echo 'CONFIG_USB_HID=m' >> .config
+echo 'CONFIG_USB_SUPPORT=y' >> .config
+echo 'CONFIG_USB_COMMON=m' >> .config
+echo 'CONFIG_USB_ARCH_HAS_HCD=y' >> .config
+echo 'CONFIG_USB_DEFAULT_PERSIST=y' >> .config
+echo 'CONFIG_USBIP_CORE=m' >> .config
+echo 'CONFIG_USBIP_VHCI_HCD=m' >> .config
+echo 'CONFIG_USBIP_VHCI_HC_PORTS=8' >> .config
+echo 'CONFIG_USBIP_VHCI_NR_HCS=1' >> .config
+echo 'CONFIG_USBIP_HOST=m' >> .config
+echo 'CONFIG_DEVTMPFS=y' >> .config
+echo 'CONFIG_DEVTMPFS_MOUNT=y' >> .config
+sed -i '.bak' '/hcd->amd_resume_bug/{s/^/\/\//;n;s/^/\/\//}' ./drivers/usb/core/hcd-pci.c 
+sed -u -e 's/YYLTYPE yylloc;/\/* YYLTYPE yylloc; *\//g' scripts/dtc/dtc-lexer.lex.c
+make oldconfig -j $(nproc)
+make modules_prepare -j $(nproc)
+make modules -j $(nproc)
+make modules_install -j $(nproc)
 
-chown -Rvf apache:apache $cwd/*
-chmod -Rvf 770 $cwd/*
+#sed -i -e 's/# skip_mount_dev="NO"/skip_mount_dev="YES"/g' /etc/conf.d/devfs
+echo "/dev            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fstab
+mount -t devtmpfs devtmpfs /dev
+mount -t devtmpfs devtmpfs /dev/shm
+
+unlink /lib/modules/15
+ln -s /lib/modules/7.1.5-0-stable/ /lib/modules/15
+
+#chown -Rvf apache:apache $cwd/*
+#chmod -Rvf 770 $cwd/*
 
 echo "Start & prepare MariaDB"
 
-#chown -Rvf mysql /var/lib/mysql/*
-#chmod -Rvf 770 /var/lib/mysql/*
 mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
 /etc/init.d/mariadb -U setup
 /etc/init.d/mariadb -U start
@@ -84,13 +115,10 @@ sed -i -e 's/LoadModule mpm_event_module/#LoadModule mpm_event_module/g' /etc/ap
 sed -i -e 's/#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/g' /etc/apache2/httpd.conf
 sed -i -e 's/# Mutex default:\/run\/apache2/Mutex file:\/run\/apache2/g' /etc/apache2/httpd.conf
 sed -i -e 's/Listen 80/Listen 2080/g' /etc/apache2/httpd.conf
-sed -i -e 's/# skip_mount_dev="NO"/skip_mount_dev="YES"/g' /etc/conf.d/devfs
 
-
-mount -t  devtmpfs devtmpfs /dev
-mount -t  devtmpfs devtmpfs /dev/shm
 mkdir /run/mod_fcgid/
 touch /run/mod_fcgid/fcgid.sock
+
 rm /etc/apache2/conf.d/fado.conf
 
 cat <<EOF >> /etc/apache2/conf.d/fado.conf
@@ -195,9 +223,7 @@ EOF
 rm /var/www/localhost/htdocs/index.html
 rm /etc/apache2/conf.d/ssl.conf
 #rm /etc/apache2/conf.d/http2.conf
-#rm /etc/apache2/conf.d/php*
 
-mv /lib/modules/7.1.5-0-stable/ /lib/modules/15
 /etc/init.d/firstart -U restart
 /etc/init.d/modules -U restart
 /etc/init.d/networking -U restart

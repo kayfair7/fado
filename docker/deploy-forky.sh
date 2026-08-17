@@ -21,8 +21,8 @@ fi
 echo "Download & install packages"
 
 echo "nameserver 8.8.4.4" > /etc/resolv.conf
-apt update && apt upgrade -y
-apt install -y apache2 php8.4 php8.4-fpm php8.4-intl php8.4-mysql php8.4-mbstring php8.4-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached htop nano locales curl
+apt update && apt -f upgrade -y
+apt -f install -y apache2 php8.4 php8.4-fpm php8.4-intl php8.4-mysql php8.4-mbstring php8.4-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached htop nano locales curl
 
 echo "Compile locales"
 
@@ -180,9 +180,6 @@ service --status-all
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
-
-if [ $1 != true ]; then
-    tail -f /var/log/apache2/other_vhosts_access.log
-fi
+tail -f /var/log/apache2/other_vhosts_access.log
 
 exit 0
