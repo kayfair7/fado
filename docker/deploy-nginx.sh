@@ -11,7 +11,7 @@ if [ -f /var/www/isdeployed ]; then
     dpkg-statoverride --remove "/usr/bin/crontab"
     dpkg-statoverride --remove "/etc/exim4/passwd.client"
     dpkg-reconfigure --force mariadb-server
-    #dpkg-reconfigure --force memcached
+    dpkg-reconfigure --force php8.4-fpm
     service nginx restart
     service mariadb restart
     service php8.4-fpm restart
