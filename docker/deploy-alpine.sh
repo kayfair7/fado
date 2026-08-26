@@ -45,13 +45,14 @@ fi
 
 echo "Download & install packages"
 
-apk add git openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd abuild bc binutils bison build-base cmake make gcc ncurses-dev ca-certificates wget runit gcompat zutils linux-stable bash-completion android-tools-bash-completion
+apk add git openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd abuild bc binutils bison build-base cmake make gcc ncurses-dev ca-certificates wget runit gcompat zutils linux-stable bash-completion android-tools-bash-completion linux-headers
 
 export KERNELVER=4.20.17
 cd /srv/
-wget https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.1.10.tar.xz
-tar xvf linux-7.1.10.tar.xz
-cd /srv/linux-7.1.10/
+wget https://github.com/torvalds/linux/archive/refs/tags/v7.2.tar.gz
+chmod -R 777 /srv
+tar xvfz v7.2.tar.gz
+cd /srv/v7.2/
 make defconfig
 ([ ! -f /proc/config.gz ] || zcat /proc/config.gz > .config)
 echo 'CONFIG_USB	=m' >> .config
@@ -80,8 +81,8 @@ mount -t devtmpfs devtmpfs /dev
 mount -t devtmpfs devtmpfs /dev/shm
 
 unlink /lib/modules/15
-ln -s /lib/modules/4.20.17 /lib/modules/15
-cp /lib/modules/7.1.5-0-stable/modules.builtin.modinfo /lib/modules/4.20.17/
+ln -s /lib/modules/7.2.0-O-stable /lib/modules/15
+cp /lib/modules/7.2.0-0-stable/modules.builtin.modinfo /lib/modules/4.20.17/
 
 depmod -a
 mkinitfs
