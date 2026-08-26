@@ -44,9 +44,9 @@ Change the password of the database user:
 -   Appointments calendar
 
 ## includes new useful input elements
-[round date and time selector](https://github.com/kayfair7/fado/src/branch/master/vendor/round-date-selector)
+[round date and time selector](https://github.com/kayfair7/fado/tree/main/vendor/round-date-selector)
 
-[weekdayrange selector](https://github.com/kayfairy7/fado/src/branch/master/vendor/weekday-range-selector)
+[weekdayrange selector](https://github.com/kayfair7/fado/tree/main/vendor/weekday-range-selector)
 
 ![FadoOpeningHours](https://user-images.githubusercontent.com/45335404/61489900-0ed7bf00-a9ac-11e9-8c40-73d68b275523.png)
 
