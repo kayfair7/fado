@@ -110,6 +110,9 @@ server {
     access_log /var/log/nginx/access.log;
     error_log  /var/log/nginx/error.log;
 
+
+    rewrite ^/(.+?)/.*$ /index.php?page=$1 last;
+
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
@@ -119,7 +122,7 @@ server {
         fastcgi_pass unix:/run/php/php8.4-fpm.sock;
     }
 
-    location ~ /\.ht {
+    location ~ \.(htpass|csv|md|sql|sh|yml)$ {
         deny all;
     }
 }

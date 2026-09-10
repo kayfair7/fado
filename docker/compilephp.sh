@@ -9,7 +9,7 @@
 down=$1
 extract=$2
 pak=$3
-op=$4
+p=$4
 
 libsdir="$PWD/libs"
 
@@ -40,21 +40,21 @@ if [ "$down" = "true" ]; then
    rm -r "$libsdir"
    mkdir -p "$libsdir"
    cd "$libsdir"
-   wget -O "$libsdir/php.tar.gz" https://www.php.net/distributions/php-8.5.8.tar.gz
-   wget -O "$libsdir/zlib.tar.gz" https://zlib.net/current/zlib.tar.gz
-   wget -O "$libsdir/oniguruma.tar.gz" https://github.com/kkos/oniguruma/releases/download/v6.9.10/onig-6.9.10.tar.gz
-   wget -O "$libsdir/icu.tgz" https://github.com/unicode-org/icu/releases/download/release-78.2/icu4c-78.2-sources.tgz
-   wget -O "$libsdir/libxml.tar.gz" https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.15.3/libxml2-v2.15.3.tar.gz
-   wget -O "$libsdir/openssl.tar.gz" https://github.com/openssl/openssl/releases/download/openssl-4.0.0/openssl-4.0.0.tar.gz
-   wget -O "$libsdir/gettext.tar.gz" https://ftp.gnu.org/pub/gnu/gettext/gettext-0.26.tar.gz
-   wget -O "$libsdir/curl.tar.gz" https://curl.se/download/curl-8.20.0.tar.gz
-   wget -O "$libsdir/sqlite.tar.gz" https://sqlite.org/2025/sqlite-autoconf-3510100.tar.gz
-   wget -O "$libsdir/ntp.tar.gz" https://downloads.nwtime.org/ntp/ntp-4.2.8p18.tar.gz
-   wget -O "$libsdir/httpd.tar.gz" https://archive.apache.org/dist/httpd/httpd-2.4.66.tar.gz
-   wget -O "$libsdir/gnupth.tar.gz" ftp://ftp.gnu.org/gnu/pth/pth-2.0.7.tar.gz
-   wget -O "$libsdir/memc.tar.gz" https://memcached.org/files/memcached-1.6.40.tar.gz
-   wget -O "$libsdir/libevent.tar.gz" https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
-   wget -O "$libsdir/glibc.tar.gz" https://ftp.gnu.org/gnu/libc/glibc-2.43.tar.gz
+   wget -q -O "$libsdir/php.tar.gz" https://www.php.net/distributions/php-8.5.8.tar.gz
+   wget -q -O "$libsdir/zlib.tar.gz" https://zlib.net/current/zlib.tar.gz
+   wget -q -O "$libsdir/oniguruma.tar.gz" https://github.com/kkos/oniguruma/releases/download/v6.9.10/onig-6.9.10.tar.gz
+   wget -q -O "$libsdir/icu.tgz" https://github.com/unicode-org/icu/releases/download/release-78.2/icu4c-78.2-sources.tgz
+   wget -q -O "$libsdir/libxml.tar.gz" https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.15.3/libxml2-v2.15.3.tar.gz
+   wget -q -O "$libsdir/openssl.tar.gz" https://github.com/openssl/openssl/releases/download/openssl-4.0.0/openssl-4.0.0.tar.gz
+   wget -q -O "$libsdir/gettext.tar.gz" https://ftp.gnu.org/pub/gnu/gettext/gettext-0.26.tar.gz
+   wget -q -O "$libsdir/curl.tar.gz" https://curl.se/download/curl-8.20.0.tar.gz
+   wget -q -O "$libsdir/sqlite.tar.gz" https://sqlite.org/2025/sqlite-autoconf-3510100.tar.gz
+   wget -q -O "$libsdir/ntp.tar.gz" https://downloads.nwtime.org/ntp/ntp-4.2.8p18.tar.gz
+   wget -q -O "$libsdir/httpd.tar.gz" https://archive.apache.org/dist/httpd/httpd-2.4.66.tar.gz
+   wget -q -O "$libsdir/gnupth.tar.gz" ftp://ftp.gnu.org/gnu/pth/pth-2.0.7.tar.gz
+   wget -q -O "$libsdir/memc.tar.gz" https://memcached.org/files/memcached-1.6.40.tar.gz
+   wget -q -O "$libsdir/libevent.tar.gz" https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
+   wget -q -O "$libsdir/glibc.tar.gz" https://ftp.gnu.org/gnu/libc/glibc-2.43.tar.gz
 
    git clone https://github.com/MariaDB/server.git
    git clone https://github.com/ntop/ntopng.git
@@ -64,24 +64,25 @@ fi
 
 if [ "$extract" = "true" ]; then
    cd "$libsdir"
-   tar xvfz "zlib.tar.gz"
-   tar xvfz "oniguruma.tar.gz"
-   tar xvf "icu.tgz"
-   tar xvfz "libxml.tar.gz"
-   tar xvfz "ntp.tar.gz"
-   tar xvfz "gnupth.tar.gz"
-   tar xvfz "curl.tar.gz"
-   tar xvfz "sqlite.tar.gz"
-   tar xvfz "gettext.tar.gz"
-   tar xvfz "httpd.tar.gz"
-   tar xvfz "memc.tar.gz"
-   tar xvfz "libevent.tar.gz"
-   tar xvfz "php.tar.gz"
-   tar xvfz "openssl.tar.gz"
-   tar xvfz "glibc.tar.gz"
+   tar xfz "zlib.tar.gz"
+   tar xfz "oniguruma.tar.gz"
+   tar xf "icu.tgz"
+   tar xfz "libxml.tar.gz"
+   tar xfz "ntp.tar.gz"
+   tar xfz "gnupth.tar.gz"
+   tar xfz "curl.tar.gz"
+   tar xfz "sqlite.tar.gz"
+   tar xfz "gettext.tar.gz"
+   tar xfz "httpd.tar.gz"
+   tar xfz "memc.tar.gz"
+   tar xfz "libevent.tar.gz"
+   tar xfz "php.tar.gz"
+   tar xfz "openssl.tar.gz"
+   tar xfz "glibc.tar.gz"
 fi
 
     export LIBSDIR="$PWD/libs"
+    export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/openssl-4.0.0/libcrypto.pc"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/libxml2"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/sqlite-autoconf-3510100/sqlite3.pc"
@@ -97,11 +98,9 @@ fi
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/curl-8.20.0/include"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/gettext-0.26"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/glibc/lib/libc.so.6"
-
     export ICU_CFLAGS="-I$LIBSDIR/icu/source/i18n -I$LIBSDIR/icu/source/common -I$LIBSDIR/icu/source/io -I$LIBSDIR/icu/source/layout -I$LIBSDIR/icu/source/data -I$LIBSDIR/icu/source/stubdata -I$LIBSDIR/icu/source/tools"
     export ICU_LIBS="-L$LIBSDIR/icu/source/stubdata -L$LIBSDIR/icu/source/common -L$LIBSDIR/icu/source/i18n -L$LIBSDIR/icu/source/io -L$LIBSDIR/icu/source/data -L$LIBSDIR/icu/source/layout -L$LIBSDIR/icu/source/tools"
-    export LDFLAGS="--symbolic --pie -lc -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap"
-    export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/include:/usr/local/lib:/usr/local/include:/usr/bin:/bin:/usr/local/bin:$PKG_CONFIG_PATH"
+    export LDFLAGS="-lpthread -lxml2 -lsqlite3 -lpcap"
 
 
 if [ "$op" = "true" ]; then
@@ -243,122 +242,6 @@ if [ "$op" = "true" ]; then
 
 fi
 
-   export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/openssl-4.0.0/libcrypto.pc"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/libxml2"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/sqlite-autoconf-3510100/sqlite3.pc"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/zlib-1.3.2/zlib.pc"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/onig-6.9.10/src"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/i18n"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/common"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/io"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/stubdata"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/layout"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/tools"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/libevent-2.1.12-stable/include"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/curl-8.20.0/include"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/gettext-0.26"
-#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/pth-2.0.7/include"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/glibc/lib/libc.so.6"
-    export LIBXML_CFLAGS="-I/usr/include/libxml2"
-    export LIBXML_LIBS="-L$LIBSDIR/libxml2-v2.15.3"
-    export OPENSSL_CFLAGS="-I$LIBSDIR/openssl-4.0.0/include"
-    export OPENSSL_LIBS="-L$LIBSDIR/openssl-4.0.0"
-    export PHP_SQLITE_CFLAGS="-I$LIBSDIR/sqlite-autoconf-3510100/sqlite3.pc"
-    export PHP_SQLITE_LIBS="-L$LIBSDIR/sqlite-autoconf-3510100"
-    export ICU_CFLAGS="-I$LIBSDIR/icu/source/i18n -I$LIBSDIR/icu/source/common -I$LIBSDIR/icu/source/io -I$LIBSDIR/icu/source/layout -I$LIBSDIR/icu/source/data -I$LIBSDIR/icu/source/stubdata -I$LIBSDIR/icu/source/tools"
-    export ICU_LIBS="-L$LIBSDIR/icu/source/stubdata -L$LIBSDIR/icu/source/common -L$LIBSDIR/icu/source/i18n -L$LIBSDIR/icu/source/io -L$LIBSDIR/icu/source/data -L$LIBSDIR/icu/source/layout -L$LIBSDIR/icu/source/tools"
-    export ONIG_CFLAGS="-I$LIBSDIR/onig-6.9.10/src"
-    export ONIG_LIBS="-L$LIBSDIR/onig-6.9.10/src"
-    export ZLIB_CFLAGS="-I$LIBSDIR/zlib-1.3.2/include"
-    export ZLIB_LIBS="-L$LIBSDIR/zlib-1.3.2/lib"
-    export INTL_CFLAGS="-I$LIBSDIR/gettext-0.26/include"
-    export INTL_LIBS="-L$LIBSDIR/gettext-0.26/lib"
-    export CURL_CFLAGS="-I$LIBSDIR/curl-8.20.0/include"
-    export CURL_LIBS="-L$LIBSDIR/curl-8.20.0/lib"
-    export SQLITE_LIBS="-L$LIBSDIR/sqlite-autoconf-3510100"
-    export SQLITE_CFLAGS="-I$LIBSDIR/sqlite-autoconf-3510100"
-    export NTP_LIBS="-L$LIBSDIR/ntp-4.2.8p18/lib"
-    export NTP_CFLAGS="-I$LIBSDIR/ntp-4.2.8p18/include"
-#    export GNU_PTH="-L$LIBSDIR/pth-2.0.7"
-#    export GNU_CFLAGS="-I$LIBSDIR/pth-2.0.7"
-    export GLIBC_LIBS="-L/usr/include/glibc/lib/libc.so.6"
-    export GLIBC_CFLAGS="-I/usr/include/glibc/include"
-    export LIBS="$GLIBC_LIBS $GNU_PTH $LIBXML_LIBS $OPENSSL_LIBS $ICU_LIBS $ONIG_LIBS $ZLIB_LIBS $INTL_LIBS $CURL_LIBS $SQLITE_LIBS $NTP_LIBS"
-    export LDFLAGS="--symbolic --pie -lc -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap $LIBS"
-    export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/include:/usr/local/lib:/usr/local/include:/usr/bin:/bin:/usr/local/bin:$PKG_CONFIG_PATH"
-    export ALL_CFLAGS="$LIBXML_CFLAGS $OPENSSL_CFLAGS $GNU_CFLAGS $ICU_CFLAGS $ONIG_CFLAGS $ZLIB_CFLAGS $INTL_CFLAGS $CURL_CFLAGS $SQLITE_CFLAGS $NTP_CFLAGS $GLIBC_CFLAGS"
-    export CFLAGS="-O3 -rdynamic -symbolic -fuse-ld=lld -static-libstdc++ -static-libgcc -fPIE -fPIC -mmusl -march=native -nostartfiles -std=c23 -std=gnu23 -pthread $ALL_CFLAGS"
-    export ICU_CFLAGS="$CFLAGS"
-    export CXXFLAGS="-O3 -rdynamic -symbolic -fuse-ld=lld -static-libstdc++ -static-libgcc -fPIE -fPIC -mmusl -march=native -nostartfiles -std=c++23 -std=gnu++23 -stdlib=libstdc++ -pthread $ALL_CFLAGS"
-    export ICU_CXXFLAGS="-O3 -rdynamic -symbolic -fuse-ld=lld -static-libstdc++ -static-libgcc -fPIE -fPIC -mmusl -march=native -nostartfiles -std=c++23 -std=gnu++23 -pthread $ALL_CFLAGS"
-    export CPPFLAGS=""
-    export PHP_INTL_STDCXX="-std=gnu++17"
-    export PHP_INTL_CXX_FLAGS="$ICU_CXXFLAGS"
-    export PATH="$PATH:$LD_LIBRARY_PATH"
-
-    export CC="/usr/bin/aarch64-linux-gnu-gcc"
-    export CXX="/usr/bin/aarch64-linux-gnu-gcc"
-    export CPP="/usr/bin/aarch64-linux-gnu-cpp"
-    export LD="/usr/bin/aarch64-linux-gnu-ld"
-
-    env
-    cd "$libsdir/php-8.5.8/"
-
-    rm "$libsdir/php-8.5.8/conf.patch"
-
-    cat <<EOF >> "$libsdir/php-8.5.8/conf.patch"
---- ext/intl/config.m4  2026-08-06 20:03:55.432399564 +0200
-+++ ext/intl/config.m4  2026-08-06 19:40:33.312400567 +0200
-@@ -90,10 +90,10 @@
-   AC_MSG_CHECKING([if intl requires -std=gnu++17])
-   AS_IF([$PKG_CONFIG icu-uc --atleast-version=74],[
-     AC_MSG_RESULT([yes])
--    PHP_CXX_COMPILE_STDCXX([17], [mandatory], [PHP_INTL_STDCXX])
-+#    PHP_CXX_COMPILE_STDCXX([17], [mandatory], [PHP_INTL_STDCXX])
-   ],[
-     AC_MSG_RESULT([no])
--    PHP_CXX_COMPILE_STDCXX([11], [mandatory], [PHP_INTL_STDCXX])
-+#    PHP_CXX_COMPILE_STDCXX([11], [mandatory], [PHP_INTL_STDCXX])
-   ])
-
-   PHP_INTL_CXX_FLAGS="$INTL_COMMON_FLAGS $PHP_INTL_STDCXX $ICU_CXXFLAGS"
-EOF
-
-    patch -p0 < "$libsdir/php-8.5.8/conf.patch"
-
-    make clean
-
-    ./buildconf -f
-
-    ./configure --enable-fpm=shared \
-            --with-fpm-user=www-data \
-            --with-fpm-group=www-data \
-            --with-fpm-systemd \
-            --with-fpm-acl \
-            --with-fpm-selinux \
-            --with-pdo-mysql=shared \
-            --with-mysql-sock="/var/mysqld/mysqld.pid" \
-            --with-libxml=shared \
-            --with-zlib \
-            --enable-libgcc \
-            --with-gnu-ld \
-            --enable-calendar \
-            --enable-intl \
-            --enable-mbstring \
-            --enable-cli \
-            --enable-soap \
-            --disable-cgi \
-            --disable-debug \
-            --disable-phpdbg-debug \
-            --host=aarch64-linux-gnu \
-            --build=aarch64 \
-            --prefix=/usr/bin
-
-     make -j $(nproc)
-
-     make install
-
      cd "$libsdir/server/"
 
      git submodule update --init --recursive
@@ -402,6 +285,122 @@ EOF
                  --target=aarch64 \
                  --with-curl="$libsdir/curl-8.20.0" \
                  --with-pcre="/usr/bin/pcre2-config"
+
+     make -j $(nproc)
+
+     make install
+
+    export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/openssl-4.0.0/libcrypto.pc"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/libxml2"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/sqlite-autoconf-3510100/sqlite3.pc"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/zlib-1.3.2/zlib.pc"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/onig-6.9.10/src"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/i18n"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/common"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/io"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/stubdata"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/layout"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/tools"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/libevent-2.1.12-stable/include"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/curl-8.20.0/include"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/gettext-0.26"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/pth-2.0.7/include"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/glibc/lib/libc.so.6"
+    export LIBXML_CFLAGS="-I/usr/include/libxml2"
+    export LIBXML_LIBS="-L$LIBSDIR/libxml2-v2.15.3"
+    export OPENSSL_CFLAGS="-I$LIBSDIR/openssl-4.0.0/include"
+    export OPENSSL_LIBS="-L$LIBSDIR/openssl-4.0.0"
+    export PHP_SQLITE_CFLAGS="-I$LIBSDIR/sqlite-autoconf-3510100/sqlite3.pc"
+    export PHP_SQLITE_LIBS="-L$LIBSDIR/sqlite-autoconf-3510100"
+    export ICU_CFLAGS="-I$LIBSDIR/icu/source/i18n -I$LIBSDIR/icu/source/common -I$LIBSDIR/icu/source/io -I$LIBSDIR/icu/source/layout -I$LIBSDIR/icu/source/data -I$LIBSDIR/icu/source/stubdata -I$LIBSDIR/icu/source/tools"
+    export ICU_LIBS="-L$LIBSDIR/icu/source/stubdata -L$LIBSDIR/icu/source/common -L$LIBSDIR/icu/source/i18n -L$LIBSDIR/icu/source/io -L$LIBSDIR/icu/source/data -L$LIBSDIR/icu/source/layout -L$LIBSDIR/icu/source/tools"
+    export ONIG_CFLAGS="-I$LIBSDIR/onig-6.9.10/src"
+    export ONIG_LIBS="-L$LIBSDIR/onig-6.9.10/src"
+    export ZLIB_CFLAGS="-I$LIBSDIR/zlib-1.3.2/include"
+    export ZLIB_LIBS="-L$LIBSDIR/zlib-1.3.2/lib"
+    export INTL_CFLAGS="-I$LIBSDIR/gettext-0.26/include"
+    export INTL_LIBS="-L$LIBSDIR/gettext-0.26/lib"
+    export CURL_CFLAGS="-I$LIBSDIR/curl-8.20.0/include"
+    export CURL_LIBS="-L$LIBSDIR/curl-8.20.0/lib"
+    export SQLITE_LIBS="-L$LIBSDIR/sqlite-autoconf-3510100"
+    export SQLITE_CFLAGS="-I$LIBSDIR/sqlite-autoconf-3510100"
+    export NTP_LIBS="-L$LIBSDIR/ntp-4.2.8p18/lib"
+    export NTP_CFLAGS="-I$LIBSDIR/ntp-4.2.8p18/include"
+#    export GNU_PTH="-L$LIBSDIR/pth-2.0.7"
+#    export GNU_CFLAGS="-I$LIBSDIR/pth-2.0.7"
+    export GLIBC_LIBS="-L/usr/include/glibc/lib/libc.so.6"
+    export GLIBC_CFLAGS="-I/usr/include/glibc/include"
+    export LIBS="$GLIBC_LIBS $GNU_PTH $LIBXML_LIBS $OPENSSL_LIBS $ICU_LIBS $ONIG_LIBS $ZLIB_LIBS $INTL_LIBS $CURL_LIBS $SQLITE_LIBS $NTP_LIBS"
+    export LDFLAGS="-lc -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap"
+    export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/include:/usr/local/lib:/usr/local/include:/usr/bin:/bin:/usr/local/bin:$PKG_CONFIG_PATH"
+    export ALL_CFLAGS="$LIBXML_CFLAGS $OPENSSL_CFLAGS $GNU_CFLAGS $ICU_CFLAGS $ONIG_CFLAGS $ZLIB_CFLAGS $INTL_CFLAGS $CURL_CFLAGS $SQLITE_CFLAGS $NTP_CFLAGS $GLIBC_CFLAGS"
+    export CFLAGS="-O2 -nostartfiles -std=c17 -std=gnu17 -pthread $ALL_CFLAGS"
+    export ICU_CFLAGS="$CFLAGS"
+    export CXXFLAGS="-O2 -nostartfiles -std=c++17 -std=gnu++17 -stdlib=libstdc++ -pthread $ALL_CFLAGS"
+    export ICU_CXXFLAGS="-O2 -nostartfiles -std=c++17 -std=gnu++17 -pthread $ALL_CFLAGS"
+    export CPPFLAGS=""
+    export PHP_INTL_STDCXX="-std=gnu++17"
+    export PHP_INTL_CXX_FLAGS="$ICU_CXXFLAGS"
+    export PATH="$PATH:$LD_LIBRARY_PATH"
+    export CC="/usr/bin/aarch64-linux-gnu-gcc"
+    export CXX="/usr/bin/aarch64-linux-gnu-gcc"
+    export CPP="/usr/bin/aarch64-linux-gnu-cpp"
+    export LD="/usr/bin/aarch64-linux-gnu-ld"
+
+    env
+
+    cd "$libsdir/php-8.5.8/"
+
+    rm "$libsdir/php-8.5.8/conf.patch"
+
+    cat <<EOF >> "$libsdir/php-8.5.8/conf.patch"
+--- ext/intl/config.m4  2026-08-06 20:03:55.432399564 +0200
++++ ext/intl/config.m4  2026-08-06 19:40:33.312400567 +0200
+@@ -90,10 +90,10 @@
+   AC_MSG_CHECKING([if intl requires -std=gnu++17])
+   AS_IF([$PKG_CONFIG icu-uc --atleast-version=74],[
+     AC_MSG_RESULT([yes])
+-    PHP_CXX_COMPILE_STDCXX([17], [mandatory], [PHP_INTL_STDCXX])
++#    PHP_CXX_COMPILE_STDCXX([17], [mandatory], [PHP_INTL_STDCXX])
+   ],[
+     AC_MSG_RESULT([no])
+-    PHP_CXX_COMPILE_STDCXX([11], [mandatory], [PHP_INTL_STDCXX])
++#    PHP_CXX_COMPILE_STDCXX([11], [mandatory], [PHP_INTL_STDCXX])
+   ])
+
+   PHP_INTL_CXX_FLAGS="$INTL_COMMON_FLAGS $PHP_INTL_STDCXX $ICU_CXXFLAGS"
+EOF
+
+    patch -p0 < "$libsdir/php-8.5.8/conf.patch"
+
+    make clean
+
+    ./buildconf -f
+
+    ./configure --enable-fpm \
+            --with-fpm-user=www-data \
+            --with-fpm-group=www-data \
+            --with-fpm-systemd \
+            --with-fpm-acl \
+            --with-fpm-selinux \
+            --with-pdo-mysql \
+            --with-mysql-sock="/var/mysqld/mysqld.pid" \
+            --with-libxml \
+            --with-zlib \
+            --enable-libgcc \
+            --with-gnu-ld \
+            --enable-calendar \
+            --enable-intl \
+            --enable-mbstring \
+            --enable-cli \
+            --enable-soap \
+            --disable-cgi \
+            --disable-debug \
+            --disable-phpdbg-debug \
+            --host=aarch64-linux-gnu \
+            --build=aarch64 \
+            --prefix=/usr/bin
 
      make -j $(nproc)
 
