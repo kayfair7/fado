@@ -3,6 +3,7 @@
 # pkg add git python proot
 # git clone https://github.com/indigo-dc/udocker.git
 # (cd udocker/udocker; ln -s maincmd.py udocker)
+# unset LD_PRELOAD
 # export PATH=~/udocker/udocker:$PATH
 # export UDOCKER_TARBALL=https://download.a.incd.pt/udocker/udocker-englib-1.2.11.tar.gz
 # udocker install
