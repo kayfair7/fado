@@ -9,7 +9,7 @@
 down=$1
 extract=$2
 pak=$3
-p=$4
+op=$4
 
 libsdir="$PWD/libs"
 
@@ -27,7 +27,7 @@ if [ "$pak" = "true" ]; then
    dpkg-statoverride --remove "/usr/bin/crontab"
    echo "nameserver 8.8.4.4" > /etc/resolv.conf
    apt-get update && apt-get upgrade -y
-   apt-get install -y git patch make autoconf libtool binutils bison re2c wget tar gcc cpp clang g++-arm-linux-gnueabi gcc-arm-linux-gnueabi cpp-arm-linux-gnueabi cpp-for-build linux-libc-dev-arm64-cross llvm  mold lld binutils-dev pkgconf python3-icu libpsl-dev libtestsweeper1 libselinux-dev libsystemd-dev libacl1-dev python3-pylibacl libevent-dev libnpth0-dev python3-libxml2 locales cmake libapr1-dev libaprutil1-dev libpcre2-dev libpcre2-32-0 pcre2-utils python3-pcre2 libpcre2-posix3 devscripts dh-exec dh-package-notes cracklib-runtime default-jdk flex gdb libaio-dev libboost-atomic-dev libboost-chrono-dev libboost-date-time-dev libboost-dev libboost-filesystem-dev libboost-regex-dev libboost-thread-dev libbz2-dev libcrack2-dev libedit-dev libedit-dev libfmt-dev libjemalloc-dev libjudy-dev libkrb5-dev liblz4-dev liblzo2-dev libnuma-dev libpam0g-dev libsnappy-dev libssl-dev liburing-dev libzstd-dev unixodbc-dev bison liblzma-dev libsystemd-dev libsctp-dev python3 gawk lsb-release gnupg libpng-dev libzmq5-dev libgcrypt20-dev libhiredis-dev libmaxminddb-dev libjson-c-dev mariadb-server libncurses-dev ccache libpcap-dev libidn2-dev libgtest-dev librrd-dev libcrypto++-dev libpthreadpool-dev libjson-c-dev libpthread-stubs0-dev
+   apt-get install -y git patch make autoconf libtool binutils bison re2c wget tar gcc cpp clang cpp-for-build linux-libc-dev-arm64-cross llvm  mold lld binutils-dev pkgconf python3-icu libpsl-dev libtestsweeper1 libselinux-dev libsystemd-dev libacl1-dev python3-pylibacl libevent-dev libnpth0-dev python3-libxml2 locales cmake libapr1-dev libaprutil1-dev libpcre2-dev libpcre2-32-0 pcre2-utils python3-pcre2 libpcre2-posix3 devscripts dh-exec dh-package-notes cracklib-runtime default-jdk flex gdb libaio-dev libboost-atomic-dev libboost-chrono-dev libboost-date-time-dev libboost-dev libboost-filesystem-dev libboost-regex-dev libboost-thread-dev libbz2-dev libcrack2-dev libedit-dev libedit-dev libfmt-dev libjemalloc-dev libjudy-dev libkrb5-dev liblz4-dev liblzo2-dev libnuma-dev libpam0g-dev libsnappy-dev libssl-dev liburing-dev libzstd-dev unixodbc-dev bison liblzma-dev libsystemd-dev libsctp-dev python3 gawk lsb-release gnupg libpng-dev libzmq5-dev libgcrypt20-dev libhiredis-dev libmaxminddb-dev libjson-c-dev mariadb-server libncurses-dev ccache libpcap-dev libidn2-dev libgtest-dev librrd-dev libcrypto++-dev libpthreadpool-dev libjson-c-dev libpthread-stubs0-dev
    locale-gen es_ES
    localedef -f UTF-8 -i es_ES es_ES.utf8
 fi
