@@ -46,7 +46,8 @@ fi
 
 echo "Download & install packages"
 
-apk add git openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd abuild bc binutils bison build-base cmake make gcc ncurses-dev ca-certificates wget runit gcompat zutils linux-stable bash-completion android-tools-bash-completion linux-headers flexget
+apk add  git openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd abuild bc binutils bison build-base cmake make gcc ncurses-dev ca-certificates wget runit gcompat zutils linux-stable bash-completion android-tools-bash-completion linux-headers flexget
+
 cd /srv
 wget -c https://github.com/torvalds/linux/archive/refs/tags/v7.2.tar.gz
 chmod -R 777 /srv
@@ -121,9 +122,12 @@ sed -i -e 's/#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/g' /et
 sed -i -e 's/# Mutex default:\/run\/apache2/Mutex file:\/run\/apache2/g' /etc/apache2/httpd.conf
 sed -i -e 's/Listen 80/Listen 2080/g' /etc/apache2/httpd.conf
 
+rm -rf  /run/mod_fcgid/
+rm -rf /run/apache2
+mkdir /run/apache2
 mkdir /run/mod_fcgid/
 touch /run/mod_fcgid/fcgid.sock
-touch /run/mod_fcgid/shm.run
+touch /run/mod_fcgid/shm
 echo 1 > /run/mod_fcgid/fcgid.sock
 
 rm /etc/apache2/conf.d/fado.conf
@@ -134,7 +138,7 @@ LoadModule php_module modules/mod_php85.so
 ServerName fado.org
 
 FcgidIPCDir /run/mod_fcgid/fcgid.sock
-FcgidProcessTableFile /run/mod_fcgid/shm.run
+FcgidProcessTableFile /run/mod_fcgid/shm
 SharememPath /dev/shm
 
 <VirtualHost _default_:2080>
@@ -142,17 +146,11 @@ SharememPath /dev/shm
         DocumentRoot /var/www/localhost/htdocs
         ServerName fado.org
 
-        <FilesMatch "\.php$">
+        <FilesMatch "\.(php|phtml)$">
             SetHandler application/x-httpd-php
             SetHandler "proxy:fcgi://127.0.0.1:9000"
             Allow from all
             FcgidWrapper "/usr/bin/fcgiwrap" .php
-         </FilesMatch>
-         <FilesMatch "\.phtml$">
-            SetHandler application/x-httpd-php
-            SetHandler "proxy:fcgi://127.0.0.1:9000"
-            Allow from all
-            FcgidWrapper "/usr/bin/fcgiwrap" .phtml
         </FilesMatch>
 
         <IfModule mod_headers.c>
@@ -176,7 +174,7 @@ SharememPath /dev/shm
             RewriteRule "/(.*)/$" "/index.php?page=$1" [L,QSA]
         </IfModule>
 
-        <FilesMatch "\.(csv|md|sql|sh|log)$">
+        <FilesMatch "\.(csv|md|sql|sh|log|yml|gz|conf)$">
             Require all denied
         </FilesMatch>
 
@@ -189,15 +187,11 @@ SharememPath /dev/shm
         DocumentRoot /var/www/localhost/htdocs
         ServerName fado.org
 
-        <FilesMatch "\.php$">
+        <FilesMatch "\.(php|phtml)$">
+            SetHandler application/x-httpd-php
             SetHandler "proxy:fcgi://127.0.0.1:9000"
             Allow from all
             FcgidWrapper "/usr/bin/fcgiwrap" .php
-         </FilesMatch>
-         <FilesMatch "\.phtml$">
-            SetHandler "proxy:fcgi://127.0.0.1:9000"
-            Allow from all
-            FcgidWrapper "/usr/bin/fcgiwrap" .phtml
         </FilesMatch>
 
         <IfModule mod_headers.c>
@@ -217,7 +211,7 @@ SharememPath /dev/shm
         SSLCertificateChainFile /home/fado/Desktop/SSL/ca.chain.pem
         SSLCertificateKeyFile /home/fado/Desktop/SSL/key.pem
 
-        <FilesMatch "\.(csv|md|sql|sh|log)$">
+        <FilesMatch "\.(csv|md|sql|sh|yml|gz|conf|log)$">
             Require all denied
         </FilesMatch>
 
