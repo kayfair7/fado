@@ -31,14 +31,14 @@ if [ -f /var/www/isdeployed ]; then
 mount -t  devtmpfs devtmpfs /dev
 mount -t  devtmpfs devtmpfs /dev/shm
 mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
-#rc-service networking -U restart
-#rc-service rngd -U restart
-#rc-service fcgiwrap -U restart
-#rc-service spawn-fcgi -U restart
-#rc-service apache2 -U restart
-#rc-service php-fpm85 -U restart
-#rc-service memcached -U restart
-rc-service mariadb -U restart
+/etc/init.d/networking -U restart
+/etc/init.d/rngd -U restart
+/etc/init.d/fcgiwrap -U restart
+/etc/init.d/spawn-fcgi -U restart
+/etc/init.d/apache2 -U restart
+/etc/init.d/php-fpm85 -U restart
+/etc/init.d/memcached -U restart
+/etc/init.d/mariadb -U restart
 rc-status -U
 tail -f /var/log/apache2/access.log
 exit 0
@@ -84,14 +84,14 @@ ln -s /lib/modules/4.20.17 /lib/modules/15
 depmod -a
 mkinitfs
 
-#chown -Rvf apache:apache $cwd/*
-#chmod -Rvf 770 $cwd/*
+chown -Rvf apache:apache $cwd/*
+chmod -Rvf 770 $cwd/*
 
 echo "Start & prepare MariaDB"
 
 mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
-rc-service mariadb -U setup
-rc-service mariadb -U start
+/etc/init.d/mariadb -U setup
+/etc/init.d/mariadb -U start
 
 mariadb -u root -e "CREATE USER IF NOT EXISTS fado@localhost IDENTIFIED BY 'rood';"
 mariadb -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'fado'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
@@ -121,12 +121,9 @@ sed -i -e 's/#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/g' /et
 sed -i -e 's/# Mutex default:\/run\/apache2/Mutex file:\/run\/apache2/g' /etc/apache2/httpd.conf
 sed -i -e 's/Listen 80/Listen 2080/g' /etc/apache2/httpd.conf
 
-rm -rf  /run/mod_fcgid/
-rm -rf /run/apache2
-mkdir /run/apache2
 mkdir /run/mod_fcgid/
 touch /run/mod_fcgid/fcgid.sock
-touch /run/mod_fcgid/shm
+touch /run/mod_fcgid/shm.run
 echo 1 > /run/mod_fcgid/fcgid.sock
 
 rm /etc/apache2/conf.d/fado.conf
@@ -137,7 +134,7 @@ LoadModule php_module modules/mod_php85.so
 ServerName fado.org
 
 FcgidIPCDir /run/mod_fcgid/fcgid.sock
-FcgidProcessTableFile /run/mod_fcgid/shm
+FcgidProcessTableFile /run/mod_fcgid/shm.run
 SharememPath /dev/shm
 
 <VirtualHost _default_:2080>
@@ -173,7 +170,7 @@ SharememPath /dev/shm
             RewriteRule "/(.*)/$" "/index.php?page=$1" [L,QSA]
         </IfModule>
 
-        <FilesMatch "\.(csv|md|sql|sh|log|yml|gz|conf)$">
+        <FilesMatch "\.(csv|md|sql|sh|log|gz|yml|conf)$">
             Require all denied
         </FilesMatch>
 
@@ -206,11 +203,11 @@ SharememPath /dev/shm
         </IfModule>
 
         SSLEngine on
-        SSLCertificateFile /home/fado/Desktop/SSL/ca.pem
-        SSLCertificateChainFile /home/fado/Desktop/SSL/ca.chain.pem
-        SSLCertificateKeyFile /home/fado/Desktop/SSL/key.pem
+        SSLCertificateFile ~/SSL/ca.pem
+        SSLCertificateChainFile ~/SSL/ca.chain.pem
+        SSLCertificateKeyFile ~/SSL/key.pem
 
-        <FilesMatch "\.(csv|md|sql|sh|yml|gz|conf|log)$">
+        <FilesMatch "\.(csv|md|sql|sh|log|gz|yml|conf)$">
             Require all denied
         </FilesMatch>
 
@@ -224,22 +221,15 @@ rm /var/www/localhost/htdocs/index.html
 rm /etc/apache2/conf.d/ssl.conf
 #rm /etc/apache2/conf.d/http2.conf
 
-rc-service firstart -U restart
-rc-service modules -U restart
-rc-service networking -U restart
-rc-service rngd -U restart
-rc-service fcgiwrap -U restart
-rc-service spawn-fcgi -U restart
-rc-service apache2 -U restart
-rc-service php-fpm85 -U restart
-rc-service memcached -U restart
-rc-update add networking -U boot
-rc-update add fcgiwrap -U boot
-rc-update add apache2 -U boot
-rc-update add modules -U boot
-rc-update add php-fpm85 -U boot
-rc-update add mariadb -U boot
-rc-update add memcached -U boot
+/etc/init.d/firstart -U restart
+/etc/init.d/modules -U restart
+/etc/init.d/networking -U restart
+/etc/init.d/rngd -U restart
+/etc/init.d/fcgiwrap -U restart
+/etc/init.d/spawn-fcgi -U restart
+/etc/init.d/apache2 -U restart
+/etc/init.d/php-fpm85 -U restart
+/etc/init.d/memcached -U restart
 rc-status -U
 
 touch /var/www/isdeployed
