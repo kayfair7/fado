@@ -10,26 +10,28 @@ Manage shops, vehicles and commodities in administration panel. Calculate invoic
 
 ![FadoScreenshot](https://user-images.githubusercontent.com/45335404/71079337-5fd22600-218b-11ea-9500-a17b98e7d9c5.png)
 
-## Install
-`Debian Bookworm, Ubuntu 24.04 or Alpine'
-
-Download to `/var/www/html/` and run install script.
-
-    cd /var/www/html/docker
-    chmod 770 *.sh
-    ./deploy.sh
+`Debian, Kali, Ubuntu or Alpine'
 
 ## Start Docker container
-    cd /home/fado
+
     git clone https://github.com/kayfair7/fado.git
     cd fado/
     docker-compose up
 
 The Apache config file and SSL keys are linked in the volume section of the `docker-compose.yml`. Activate HTTPS with `/usr/sbin/a2enmod ssl`.
+
+## Start in Termux App
 Compatible with Android and Termux App utilizing udocker on ARM CPU.
 
+    pkg add udocker python proot
+    udocker install
+    cp docker/udocker.conf ~/.udocker/
+    udocker run --platform="linux/arm/v7" --volume="/data/data/com.termux/files/home/fado/:/var/www/html/" debian:latest /bin/bash
+    udocker setup --execmode=P1 <uid>
+    /bin/bash /var/www/html/docker/deploy-forky.sh
+
 ## User
-Open <http://127.0.0.1> or <https://127.0.0.1> and login as superuser `fado` with password `rood`.
+Open <http://127.0.0.1> or <http://127.0.0.1:2080> and login as superuser `fado` with password `rood`.
 Change the password of the database user:
 
     mariadb -u root -e "SET PASSWORD FOR 'fado'@'localhost' = PASSWORD('secret1');"

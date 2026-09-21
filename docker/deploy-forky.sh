@@ -20,7 +20,7 @@ fi
 
 echo "Download & install packages"
 
-echo "nameserver 8.8.4.4" > /etc/resolv.conf
+echo "nameserver 1.1.1.1" > /etc/resolv.conf
 apt update && apt -f upgrade -y
 apt -f install -y apache2 php8.4 php8.4-fpm php8.4-intl php8.4-mysql php8.4-mbstring php8.4-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached htop nano locales curl
 
@@ -89,8 +89,10 @@ echo "Configure and start Apache and PHP FPM"
 
 rm /etc/apache2/sites-available/*
 rm /etc/apache2/sites-enabled/*
-
+rm -r /var/apache2
+mkdir /var/apache2
 sed -i -e 's/Listen 80/Listen 2080/g' /etc/apache2/ports.conf
+echo "Mutex file:/var/apache2" >> /etc/apache2/apache2.conf
 
 cat <<EOF >> /etc/apache2/sites-available/fado.conf
 ServerName fado.org
@@ -121,7 +123,7 @@ ServerName fado.org
             RewriteRule "/(.*)/$" "/index.php?page=$1" [L,QSA]
         </IfModule>
 
-        <FilesMatch "\.(csv|md|sql|sh|log)$">
+        <FilesMatch "\.(csv|md|yml|sql|sh|log)$">
             Require all denied
         </FilesMatch>
 
@@ -147,11 +149,11 @@ ServerName fado.org
         </IfModule>
 
         SSLEngine on
-        SSLCertificateFile /home/fado/Desktop/SSL/ca.pem
-        SSLCertificateChainFile /home/fado/Desktop/SSL/ca.chain.pem
-        SSLCertificateKeyFile /home/fado/Desktop/SSL/key.pem
+        SSLCertificateFile ~/SSL/ca.pem
+        SSLCertificateChainFile ~/SSL/ca.chain.pem
+        SSLCertificateKeyFile ~/SSL/key.pem
 
-        <FilesMatch "\.(csv|md|sql|sh|log)$">
+        <FilesMatch "\.(csv|yml|md|sql|sh|log)$">
             Require all denied
         </FilesMatch>
 
