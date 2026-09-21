@@ -27,7 +27,6 @@ Compatible with Android and Termux App utilizing udocker on ARM CPU.
     udocker install
     cp docker/udocker.conf ~/.udocker/
     udocker run --platform="linux/arm/v7" --volume="/data/data/com.termux/files/home/fado/:/var/www/html/" debian:latest /bin/bash
-    udocker setup --execmode=P1 <uid>
     /bin/bash /var/www/html/docker/deploy-forky.sh
 
 ## User

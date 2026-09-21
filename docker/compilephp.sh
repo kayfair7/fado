@@ -27,7 +27,7 @@ if [ "$pak" = "true" ]; then
    dpkg-statoverride --remove "/usr/bin/crontab"
    echo "nameserver 8.8.4.4" > /etc/resolv.conf
    apt-get update && apt-get upgrade -y
-   apt-get install -y git patch make autoconf libtool binutils bison re2c wget tar gcc cpp clang cpp-for-build linux-libc-dev-arm64-cross llvm  mold lld binutils-dev pkgconf python3-icu libpsl-dev libtestsweeper1 libselinux-dev libsystemd-dev libacl1-dev python3-pylibacl libevent-dev libnpth0-dev python3-libxml2 locales cmake libapr1-dev libaprutil1-dev libpcre2-dev libpcre2-32-0 pcre2-utils python3-pcre2 libpcre2-posix3 devscripts dh-exec dh-package-notes cracklib-runtime default-jdk flex gdb libaio-dev libboost-atomic-dev libboost-chrono-dev libboost-date-time-dev libboost-dev libboost-filesystem-dev libboost-regex-dev libboost-thread-dev libbz2-dev libcrack2-dev libedit-dev libedit-dev libfmt-dev libjemalloc-dev libjudy-dev libkrb5-dev liblz4-dev liblzo2-dev libnuma-dev libpam0g-dev libsnappy-dev libssl-dev liburing-dev libzstd-dev unixodbc-dev bison liblzma-dev libsystemd-dev libsctp-dev python3 gawk lsb-release gnupg libpng-dev libzmq5-dev libgcrypt20-dev libhiredis-dev libmaxminddb-dev libjson-c-dev mariadb-server libncurses-dev ccache libpcap-dev libidn2-dev libgtest-dev librrd-dev libcrypto++-dev libpthreadpool-dev libjson-c-dev libpthread-stubs0-dev
+   apt-get install -y git patch make autoconf libtool binutils bison re2c wget tar gcc cpp clang cpp-for-build linux-libc-dev-arm64-cross llvm  mold lld binutils-dev pkgconf python3-icu libpsl-dev libtestsweeper1 libselinux-dev libsystemd-dev libacl1-dev python3-pylibacl libevent-dev libnpth0-dev python3-libxml2 locales cmake libapr1-dev libaprutil1-dev libpcre2-dev libpcre2-32-0 pcre2-utils python3-pcre2 libpcre2-posix3 devscripts dh-exec dh-package-notes cracklib-runtime default-jdk flex gdb libaio-dev libboost-atomic-dev libboost-chrono-dev libboost-date-time-dev libboost-dev libboost-filesystem-dev libboost-regex-dev libboost-thread-dev libbz2-dev libcrack2-dev libedit-dev libedit-dev libfmt-dev libjemalloc-dev libjudy-dev libkrb5-dev liblz4-dev liblzo2-dev libnuma-dev libpam0g-dev libsnappy-dev libssl-dev liburing-dev libzstd-dev unixodbc-dev bison liblzma-dev libsystemd-dev libsctp-dev python3 gawk lsb-release gnupg libpng-dev libzmq5-dev libgcrypt20-dev libhiredis-dev libmaxminddb-dev libjson-c-dev mariadb-server libncurses-dev ccache libpcap-dev libidn2-dev libgtest-dev librrd-dev libcrypto++-dev libpthreadpool-dev libjson-c-dev libpthread-stubs0-dev libxml2-dev libsqlite3-dev libopenssl-dev libpcap-dev
    locale-gen es_ES
    localedef -f UTF-8 -i es_ES es_ES.utf8
 fi
@@ -40,21 +40,21 @@ if [ "$down" = "true" ]; then
    rm -r "$libsdir"
    mkdir -p "$libsdir"
    cd "$libsdir"
-   wget -q -O "$libsdir/php.tar.gz" https://www.php.net/distributions/php-8.5.8.tar.gz
-   wget -q -O "$libsdir/zlib.tar.gz" https://zlib.net/current/zlib.tar.gz
-   wget -q -O "$libsdir/oniguruma.tar.gz" https://github.com/kkos/oniguruma/releases/download/v6.9.10/onig-6.9.10.tar.gz
-   wget -q -O "$libsdir/icu.tgz" https://github.com/unicode-org/icu/releases/download/release-78.2/icu4c-78.2-sources.tgz
-   wget -q -O "$libsdir/libxml.tar.gz" https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.15.3/libxml2-v2.15.3.tar.gz
-   wget -q -O "$libsdir/openssl.tar.gz" https://github.com/openssl/openssl/releases/download/openssl-4.0.0/openssl-4.0.0.tar.gz
-   wget -q -O "$libsdir/gettext.tar.gz" https://ftp.gnu.org/pub/gnu/gettext/gettext-0.26.tar.gz
-   wget -q -O "$libsdir/curl.tar.gz" https://curl.se/download/curl-8.20.0.tar.gz
-   wget -q -O "$libsdir/sqlite.tar.gz" https://sqlite.org/2025/sqlite-autoconf-3510100.tar.gz
-   wget -q -O "$libsdir/ntp.tar.gz" https://downloads.nwtime.org/ntp/ntp-4.2.8p18.tar.gz
-   wget -q -O "$libsdir/httpd.tar.gz" https://archive.apache.org/dist/httpd/httpd-2.4.66.tar.gz
-   wget -q -O "$libsdir/gnupth.tar.gz" ftp://ftp.gnu.org/gnu/pth/pth-2.0.7.tar.gz
-   wget -q -O "$libsdir/memc.tar.gz" https://memcached.org/files/memcached-1.6.40.tar.gz
-   wget -q -O "$libsdir/libevent.tar.gz" https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
-   wget -q -O "$libsdir/glibc.tar.gz" https://ftp.gnu.org/gnu/libc/glibc-2.43.tar.gz
+   wget -O "$libsdir/php.tar.gz" https://www.php.net/distributions/php-8.5.8.tar.gz
+   wget -O "$libsdir/zlib.tar.gz" https://zlib.net/current/zlib.tar.gz
+   wget -O "$libsdir/oniguruma.tar.gz" https://github.com/kkos/oniguruma/releases/download/v6.9.10/onig-6.9.10.tar.gz
+   wget -O "$libsdir/icu.tgz" https://github.com/unicode-org/icu/releases/download/release-78.2/icu4c-78.2-sources.tgz
+   wget -O "$libsdir/libxml.tar.gz" https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.15.3/libxml2-v2.15.3.tar.gz
+   wget -O "$libsdir/openssl.tar.gz" https://github.com/openssl/openssl/releases/download/openssl-4.0.0/openssl-4.0.0.tar.gz
+   wget -O "$libsdir/gettext.tar.gz" https://ftp.gnu.org/pub/gnu/gettext/gettext-0.26.tar.gz
+   wget -O "$libsdir/curl.tar.gz" https://curl.se/download/curl-8.20.0.tar.gz
+   wget -O "$libsdir/sqlite.tar.gz" https://sqlite.org/2025/sqlite-autoconf-3510100.tar.gz
+   wget -O "$libsdir/ntp.tar.gz" https://downloads.nwtime.org/ntp/ntp-4.2.8p18.tar.gz
+   wget -O "$libsdir/httpd.tar.gz" https://archive.apache.org/dist/httpd/httpd-2.4.66.tar.gz
+   wget -O "$libsdir/gnupth.tar.gz" ftp://ftp.gnu.org/gnu/pth/pth-2.0.7.tar.gz
+   wget -O "$libsdir/memc.tar.gz" https://memcached.org/files/memcached-1.6.40.tar.gz
+   wget -O "$libsdir/libevent.tar.gz" https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
+   wget -O "$libsdir/glibc.tar.gz" https://ftp.gnu.org/gnu/libc/glibc-2.43.tar.gz
 
    git clone https://github.com/MariaDB/server.git
    git clone https://github.com/ntop/ntopng.git
@@ -64,43 +64,43 @@ fi
 
 if [ "$extract" = "true" ]; then
    cd "$libsdir"
-   tar xfz "zlib.tar.gz"
-   tar xfz "oniguruma.tar.gz"
-   tar xf "icu.tgz"
-   tar xfz "libxml.tar.gz"
-   tar xfz "ntp.tar.gz"
-   tar xfz "gnupth.tar.gz"
-   tar xfz "curl.tar.gz"
-   tar xfz "sqlite.tar.gz"
-   tar xfz "gettext.tar.gz"
-   tar xfz "httpd.tar.gz"
-   tar xfz "memc.tar.gz"
-   tar xfz "libevent.tar.gz"
-   tar xfz "php.tar.gz"
-   tar xfz "openssl.tar.gz"
-   tar xfz "glibc.tar.gz"
+   tar xfvz "zlib.tar.gz"
+   tar xfvz "oniguruma.tar.gz"
+   tar xfv "icu.tgz"
+   tar xfvz "libxml.tar.gz"
+   tar xfvz "ntp.tar.gz"
+   tar xfvz "gnupth.tar.gz"
+   tar xfvz "curl.tar.gz"
+   tar xfvz "sqlite.tar.gz"
+   tar xfvz "gettext.tar.gz"
+   tar xfvz "httpd.tar.gz"
+   tar xfvz "memc.tar.gz"
+   tar xfvz "libevent.tar.gz"
+   tar xfvz "php.tar.gz"
+   tar xfvz "openssl.tar.gz"
+   tar xfvz "glibc.tar.gz"
 fi
 
     export LIBSDIR="$PWD/libs"
-    export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/openssl-4.0.0/libcrypto.pc"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/libxml2"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/sqlite-autoconf-3510100/sqlite3.pc"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/zlib-1.3.2/zlib.pc"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/onig-6.9.10/src"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/i18n"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/common"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/io"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/stubdata"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/layout"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/tools"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/libevent-2.1.12-stable/include"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/curl-8.20.0/include"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/gettext-0.26"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/glibc/lib/libc.so.6"
+#    export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/openssl-4.0.0/libcrypto.pc"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/libxml2"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/sqlite-autoconf-3510100/sqlite3.pc"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/zlib-1.3.2/zlib.pc"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/onig-6.9.10/src"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/i18n"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/common"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/io"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/stubdata"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/layout"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/icu/source/tools"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/libevent-2.1.12-stable/include"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/curl-8.20.0/include"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/gettext-0.26"
+#    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/glibc/lib/libc.so.6"
     export ICU_CFLAGS="-I$LIBSDIR/icu/source/i18n -I$LIBSDIR/icu/source/common -I$LIBSDIR/icu/source/io -I$LIBSDIR/icu/source/layout -I$LIBSDIR/icu/source/data -I$LIBSDIR/icu/source/stubdata -I$LIBSDIR/icu/source/tools"
     export ICU_LIBS="-L$LIBSDIR/icu/source/stubdata -L$LIBSDIR/icu/source/common -L$LIBSDIR/icu/source/i18n -L$LIBSDIR/icu/source/io -L$LIBSDIR/icu/source/data -L$LIBSDIR/icu/source/layout -L$LIBSDIR/icu/source/tools"
-    export LDFLAGS="-lpthread -lxml2 -lsqlite3 -lpcap"
+#    export LDFLAGS="-lpthread -lxml2 -lsqlite3 -lpcap"
 
 
 if [ "$op" = "true" ]; then
@@ -337,8 +337,8 @@ fi
     export ALL_CFLAGS="$LIBXML_CFLAGS $OPENSSL_CFLAGS $GNU_CFLAGS $ICU_CFLAGS $ONIG_CFLAGS $ZLIB_CFLAGS $INTL_CFLAGS $CURL_CFLAGS $SQLITE_CFLAGS $NTP_CFLAGS $GLIBC_CFLAGS"
     export CFLAGS="-O2 -nostartfiles -std=c17 -std=gnu17 -pthread $ALL_CFLAGS"
     export ICU_CFLAGS="$CFLAGS"
-    export CXXFLAGS="-O2 -nostartfiles -std=c++17 -std=gnu++17 -stdlib=libstdc++ -pthread $ALL_CFLAGS"
-    export ICU_CXXFLAGS="-O2 -nostartfiles -std=c++17 -std=gnu++17 -pthread $ALL_CFLAGS"
+    export CFLAGS="-O3 -nostartfiles -std=c++17 -std=gnu++17 -std=libstdc++ -pthread $ALL_CFLAGS"
+    export ICU_CXXFLAGS="-O3 -nostartfiles -std=c++17 -std=gnu++17 -pthread $ALL_CFLAGS"
     export CPPFLAGS=""
     export PHP_INTL_STDCXX="-std=gnu++17"
     export PHP_INTL_CXX_FLAGS="$ICU_CXXFLAGS"
