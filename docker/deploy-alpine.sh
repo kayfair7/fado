@@ -52,38 +52,21 @@ wget -nc https://github.com/torvalds/linux/archive/refs/tags/v7.2.tar.gz
 chmod -R 777 /srv
 tar xvf v7.2.tar.gz
 cd /srv/linux-7.2/
-make defconfig
-([ ! -f /proc/config.gz ] || zcat /proc/config.gz > .config)
-echo 'CONFIG_USB	=m' >> .config
-echo 'CONFIG_USB_HID=m' >> .config
-echo 'CONFIG_USB_SUPPORT=y' >> .config
-echo 'CONFIG_USB_COMMON=m' >> .config
-echo 'CONFIG_USB_ARCH_HAS_HCD=y' >> .config
-echo 'CONFIG_USB_DEFAULT_PERSIST=y' >> .config
-echo 'CONFIG_USBIP_CORE=m' >> .config
-echo 'CONFIG_USBIP_VHCI_HCD=m' >> .config
-echo 'CONFIG_USBIP_VHCI_HC_PORTS=8' >> .config
-echo 'CONFIG_USBIP_VHCI_NR_HCS=1' >> .config
-echo 'CONFIG_USBIP_HOST=m' >> .config
-sed -i -e  's/CONFIG_DEVTMPFS=n/CONFIG_DEVTMPFS=y/g' .config
-sed -i -e 's/CONFIG_DEVTMPFS_MOUNT=n/CONFIG_DEVTMPFS_MOUNT=y/g' .config
 sed -i -e 's/YYLTYPE yylloc;/\/* YYLTYPE yylloc; *\//g' scripts/dtc/dtc-lexer.lex.c
-make oldconfig -j $(nproc)
+make defconfig
+make oldconfig
 make modules_prepare -j $(nproc)
 make modules -j $(nproc)
 make modules_install
-
 #sed -i -e 's/# skip_mount_dev="NO"/skip_mount_dev="YES"/g' /etc/conf.d/devfs
 echo "/dev            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fstab
 echo "/dev/shm            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fstab
 mount -t devtmpfs devtmpfs /dev
 mount -t devtmpfs devtmpfs /dev/shm
-
 unlink /lib/modules/15
 ln -s /lib/modules/4.20.17 /lib/modules/15
 depmod -a
 mkinitfs
-
 chown -Rvf apache:apache $cwd/*
 chmod -Rvf 770 $cwd/*
 
