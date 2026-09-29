@@ -108,6 +108,11 @@ ServerName fado.org
             Header set Access-Control-Max-Age "3600"
         </IfModule>
 
+        <Directory /var/www/html>
+            AllowOverride All
+            Require all granted
+        </Directory>
+
         <IfModule mod_ssl.c>
             <IfModule mod_rewrite.c>
                 RewriteEngine on
@@ -135,6 +140,11 @@ ServerName fado.org
         ServerAdmin admin@fado.org
         DocumentRoot /var/www/html/
         ServerName fado.org
+
+        <Directory /var/www/html>
+            AllowOverride All
+            Require all granted
+        </Directory>
 
         <IfModule mod_headers.c>
             Header set Access-Control-Allow-Origin "*"
