@@ -13,10 +13,7 @@ export XDG_RUNTIME_DIR=/run/$(id -u)
 mkdir -p /run/openrc
 touch /run/openrc/softlevel
 mkdir -p "$XDG_RUNTIME_DIR/openrc/"
-touch /run/openrc/softlevel
 touch "$XDG_RUNTIME_DIR/openrc/softlevel"
-mkdir -p "$XDG_RUNTIME_DIR/0/openrc"
-touch "$XDG_RUNTIME_DIR/0/openrc/softlevel"
 adduser -D apache
 adduser -D memcached
 adduser -D mariadb
@@ -24,32 +21,33 @@ adduser -D mysql
 adduser -D fcgiwrap
 adduser -D rngd
 adduser -D messagebus
-
-cwd=$(dirname "$PWD")
+cd /var/www/localhost
 
 if [ -f /var/www/isdeployed ]; then
-mount -t  devtmpfs devtmpfs /dev
-mount -t  devtmpfs devtmpfs /dev/shm
-mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
-/etc/init.d/networking -U restart
-/etc/init.d/rngd -U restart
-/etc/init.d/fcgiwrap -U restart
-/etc/init.d/spawn-fcgi -U restart
-/etc/init.d/apache2 -U restart
-/etc/init.d/php-fpm85 -U restart
-/etc/init.d/memcached -U restart
-/etc/init.d/mariadb -U restart
-rc-status -U
-tail -f /var/log/apache2/access.log
-exit 0
+    mount -t  devtmpfs devtmpfs /dev
+    mount -t  devtmpfs devtmpfs /dev/shm
+    mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
+    /etc/init.d/networking -U restart
+    /etc/init.d/rngd -U restart
+    /etc/init.d/fcgiwrap -U restart
+    /etc/conf.d/spawn-fcgi.trac -U restart
+    /etc/init.d/apache2 -U restart
+    /etc/init.d/php-fpm85 -U restart
+    /etc/init.d/memcached -U restart
+    /etc/init.d/mariadb -U restart
+    rc-status -U
+    tail -f /var/log/apache2/access.log
 fi
 
 echo "Download & install packages"
 
-apk add git openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd abuild bc binutils bison build-base cmake make gcc ncurses-dev ca-certificates wget runit gcompat zutils linux-stable bash-completion android-tools-bash-completion linux-headers flexget
+apk add nano wget git openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd abuild bc binutils bison build-base cmake make gcc ncurses-dev ca-certificates wget runit gcompat bash-completion android-tools-bash-completion linux-headers flexget
+chown -Rvf apache:apache $PWD
+chmod -Rvf 770 $PWD
+chmod -Rvf 770 /var
+chmod -Rvf 770 /srv
 cd /srv
 wget -nc https://github.com/torvalds/linux/archive/refs/tags/v7.2.tar.gz
-chmod -R 777 /srv
 tar xvf v7.2.tar.gz
 cd /srv/linux-7.2/
 sed -i -e 's/YYLTYPE yylloc;/\/* YYLTYPE yylloc; *\//g' scripts/dtc/dtc-lexer.lex.c
@@ -67,8 +65,8 @@ unlink /lib/modules/15
 ln -s /lib/modules/4.20.17 /lib/modules/15
 depmod -a
 mkinitfs
-chown -Rvf apache:apache $cwd/*
-chmod -Rvf 770 $cwd/*
+ln -s spawn-fcgi /etc/init.d/spawn-fcgi.trac
+cp /etc/conf.d/spawn-fcgi /etc/conf.d/spawn-fcgi.trac
 
 echo "Start & prepare MariaDB"
 
@@ -209,7 +207,7 @@ rm /etc/apache2/conf.d/ssl.conf
 /etc/init.d/networking -U restart
 /etc/init.d/rngd -U restart
 /etc/init.d/fcgiwrap -U restart
-/etc/init.d/spawn-fcgi -U restart
+/etc/conf.d/spawn-fcgi.trac -U restart
 /etc/init.d/apache2 -U restart
 /etc/init.d/php-fpm85 -U restart
 /etc/init.d/memcached -U restart
@@ -217,5 +215,3 @@ rc-status -U
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
-tail -f /var/log/apache2/access.log
-exit 0

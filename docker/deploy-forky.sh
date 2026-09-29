@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cwd=$(dirname "$PWD")
+cd /var/www/html
 
 if [ -f /var/www/isdeployed ]; then
     dpkg-statoverride --remove "/etc/ssl/private"
@@ -15,7 +15,6 @@ if [ -f /var/www/isdeployed ]; then
     service memcached restart
     service --status-all
     tail -f /var/log/apache2/other_vhosts_access.log
-    exit 0
 fi
 
 echo "Download & install packages"
@@ -59,9 +58,10 @@ localedef -f UTF-8 -i ru_RU ru_RU.utf8
 update-locale
 locale -a
 
-chown -R www-data $cwd/*
-chmod -R 770 $cwd/*
-chgrp -R www-data $cwd/*
+chown -R www-data $PWD/*
+chmod -R 770 $PWD/*
+chgrp -R www-data $PWD/*
+chmod -Rvf 777 /tmp
 
 echo "Start & prepare MariaDB"
 
@@ -71,11 +71,11 @@ mariadb -u root -e "CREATE USER IF NOT EXISTS fado@localhost IDENTIFIED BY 'rood
 mariadb -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'fado'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
 mariadb -u root -e "DROP DATABASE IF EXISTS fado; CREATE DATABASE fado DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
 mariadb -u root -e "GRANT ALL PRIVILEGES ON fado.* TO 'fado'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-mariadb -u fado -prood fado < "$cwd/fado-DML.sql"
+mariadb -u fado -prood fado < "$PWD/fado-DML.sql"
 
-rm "$cwd/database.csv"
+rm "$PWD/database.csv"
 
-cat <<EOF >> "$cwd/database.csv"
+cat <<EOF >> "$PWD/database.csv"
 user;fado
 pwd;rood
 db;fado
@@ -182,6 +182,3 @@ service --status-all
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
-tail -f /var/log/apache2/other_vhosts_access.log
-
-exit 0
