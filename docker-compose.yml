@@ -1,17 +1,19 @@
 #
 # start fado server in docker container
 #
-version: '3'
 services:
-  php:
-    image: kalilinux/kali-rolling:latest
-    command: "sh /var/www/html/docker/deploy-forky.sh"
+  fado-srv:
+    image: debian:trixie
+    command: "/bin/bash /var/www/html/docker/deploy-forky.sh"
+    user: root
     environment:
       ROOT: "/var/www/html"
     ports:
       - 2080:2080
-      - 80:80
-      - 443:443
+      - 2443:2443
+#      - 80:80
+#      - 443:443
     volumes:
-      - ~/fado:/var/www/html/
-      - ~/ssl:/var/www/ssl/
+      - /home/fa/fado:/var/www/html
+#      - /home/fa/ssl:/var/www/ssl
+

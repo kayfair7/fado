@@ -16,7 +16,7 @@ Manage shops, vehicles and commodities in administration panel. Calculate invoic
 
     git clone https://github.com/kayfair7/fado.git
     cd fado/
-    docker-compose up
+    docker compose up
 
 The Apache config file and SSL keys are linked in the volume section of the `docker-compose.yml`. Activate HTTPS with `/usr/sbin/a2enmod ssl`.
 
