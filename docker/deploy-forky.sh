@@ -58,9 +58,10 @@ localedef -f UTF-8 -i ru_RU ru_RU.utf8
 update-locale
 locale -a
 
-chown -R www-data $PWD/*
-chmod -R 770 $PWD/*
-chgrp -R www-data $PWD/*
+cd /var/www/html
+chown -R www-data $PWD
+chmod -R 770 $PWD
+chgrp -R www-data $PWD
 chmod -Rvf 777 /tmp
 
 echo "Start & prepare MariaDB"
@@ -83,6 +84,10 @@ host;127.0.0.1
 port;3306
 charset;utf8
 socket;/var/mysqld/mysqld.pid
+EOF
+
+cat <<EOF >> "$PWD/.htaccess"
+
 EOF
 
 echo "Configure and start Apache and PHP FPM"
