@@ -317,7 +317,7 @@ fi
     export GLIBC_CFLAGS="-I/usr/include/glibc/include"
     export ALL_CFLAGS="$LIBXML_CFLAGS $OPENSSL_CFLAGS $GNU_CFLAGS $ICU_CFLAGS $ONIG_CFLAGS $ZLIB_CFLAGS $INTL_CFLAGS $CURL_CFLAGS $SQLITE_CFLAGS $NTP_CFLAGS $GLIBC_CFLAGS"
     export LDFLAGS="$GLIBC_LIBS $GNU_PTH $LIBXML_LIBS $OPENSSL_LIBS $ICU_LIBS $ONIG_LIBS $ZLIB_LIBS $INTL_LIBS $CURL_LIBS $SQLITE_LIBS $NTP_LIBS"
-    export LIBS="-lc -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap"
+    export LIBS="-lc -lz -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap"
     export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/include:/usr/local/lib:/usr/local/include:/usr/bin:/bin:/usr/local/bin:$PKG_CONFIG_PATH"
     export CFLAGS="-O2 -nostartfiles -std=c17 -std=gnu17 -pthread $ALL_CFLAGS"
     export ICU_CFLAGS="$CFLAGS"
