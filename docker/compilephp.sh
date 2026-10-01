@@ -85,7 +85,7 @@ fi
     export LIBSDIR="$PWD/libs"
     export ICU_CFLAGS="-I$LIBSDIR/icu/source/i18n -I$LIBSDIR/icu/source/common -I$LIBSDIR/icu/source/io -I$LIBSDIR/icu/source/layout -I$LIBSDIR/icu/source/data -I$LIBSDIR/icu/source/stubdata -I$LIBSDIR/icu/source/tools"
     export ICU_LIBS="-L$LIBSDIR/icu/source/stubdata -L$LIBSDIR/icu/source/common -L$LIBSDIR/icu/source/i18n -L$LIBSDIR/icu/source/io -L$LIBSDIR/icu/source/data -L$LIBSDIR/icu/source/layout -L$LIBSDIR/icu/source/tools"
-    export LDFLAGS="-lpthread -lxml2 -lsqlite3 -lpcap"
+    export LIBS="-lpthread -lxml2 -lsqlite3 -lpcap"
 
 
 if [ "$op" = "true" ]; then
@@ -315,14 +315,14 @@ fi
     export GNU_CFLAGS="-I$LIBSDIR/pth-2.0.7"
     export GLIBC_LIBS="-L/usr/include/glibc/lib/libc.so.6"
     export GLIBC_CFLAGS="-I/usr/include/glibc/include"
-    export LIBS="$GLIBC_LIBS $GNU_PTH $LIBXML_LIBS $OPENSSL_LIBS $ICU_LIBS $ONIG_LIBS $ZLIB_LIBS $INTL_LIBS $CURL_LIBS $SQLITE_LIBS $NTP_LIBS"
     export ALL_CFLAGS="$LIBXML_CFLAGS $OPENSSL_CFLAGS $GNU_CFLAGS $ICU_CFLAGS $ONIG_CFLAGS $ZLIB_CFLAGS $INTL_CFLAGS $CURL_CFLAGS $SQLITE_CFLAGS $NTP_CFLAGS $GLIBC_CFLAGS"
-    export LDFLAGS="-lc -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap"
+    export LDFLAGS="$GLIBC_LIBS $GNU_PTH $LIBXML_LIBS $OPENSSL_LIBS $ICU_LIBS $ONIG_LIBS $ZLIB_LIBS $INTL_LIBS $CURL_LIBS $SQLITE_LIBS $NTP_LIBS"
+    export LIBS="-lc -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap"
     export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/include:/usr/local/lib:/usr/local/include:/usr/bin:/bin:/usr/local/bin:$PKG_CONFIG_PATH"
-    export CFLAGS="-O2 -nostartfiles -std=c17 -std=gnu17 -pthread $LIBS"
+    export CFLAGS="-O2 -nostartfiles -std=c17 -std=gnu17 -pthread $ALL_CFLAGS"
     export ICU_CFLAGS="$CFLAGS"
-    export CFLAGS="-O3 -nostartfiles -std=c++17 -std=gnu++17 -pthread $LIBS"
-    export ICU_CXXFLAGS="-O3 -nostartfiles -std=c++17 -std=gnu++17 -pthread $LIBS"
+    export CXXFLAGS="-O3 -nostartfiles -std=c++17 -std=gnu++17 -pthread $ALL_CFLAGS"
+    export ICU_CXXFLAGS="$CXXFLAGS"
     export CPPFLAGS=""
     export PHP_INTL_STDCXX="-std=gnu++17"
     export PHP_INTL_CXX_FLAGS="$ICU_CXXFLAGS"
