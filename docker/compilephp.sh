@@ -96,7 +96,7 @@ if [ "$op" = "true" ]; then
 
     cd "glibc-build"
 
-    /bin/bash "$libsdir/glibc-2.43/configure" --target=x86_64 --prefix="/usr/include/glibc" --srcdir="$libsdir/glibc-2.43"
+    /bin/bash "$libsdir/glibc-2.43/configure" --target=aarch64 --prefix="/usr/include/glibc" --srcdir="$libsdir/glibc-2.43"
 
     make -j $(nproc)
 
@@ -104,7 +104,7 @@ if [ "$op" = "true" ]; then
 
     cd "$libsdir/openssl-4.0.0/"
 
-    ./Configure linux-x86_64 --prefix="/usr/bin"
+    ./Configure linux-arm --prefix="/usr/bin"
 
     make -j $(nproc)
 
@@ -113,7 +113,7 @@ if [ "$op" = "true" ]; then
     cd "$libsdir/pth-2.0.7"
 
     ./configure --host=arm-linux-gnu \
-                --build=arm --target=x86_64
+                --build=arm --target=aarch64
 
     make -j $(nproc)
 
@@ -134,8 +134,8 @@ if [ "$op" = "true" ]; then
                 --with-openssl-incdir="$libsdir/openssl-4.0.0/include" \
                 --enable-local-libevent="$libsdir/libevent-release-2.1.12-stable" \
                 --prefix="/usr/bin" \
-                --host=x86_64-linux-gnu \
-                --build=x86_64
+                --host=aarch64-linux-gnu \
+                --build=aarch64
 
     make -j $(nproc)
 
@@ -160,7 +160,7 @@ if [ "$op" = "true" ]; then
 
     cd "$libsdir/icu/source/"
 
-    ./configure --host=x86_64-linux-gnu
+    ./configure --host=aarch64-linux-gnu
 
     make -j $(nproc)
 
@@ -168,7 +168,7 @@ if [ "$op" = "true" ]; then
 
     cd "$libsdir/gettext-0.26"
 
-    ./configure --host=x86_64-linux-gnu
+    ./configure --host=aarch64-linux-gnu
 
     make -j $(nproc)
 
@@ -177,7 +177,7 @@ if [ "$op" = "true" ]; then
     cd "$libsdir/curl-8.20.0/"
 
     ./configure --with-openssl \
-                --host=x86_64-linux-gnu \
+                --host=aarch64-linux-gnu \
                 --prefix="/usr/bin"
 
     make -j $(nproc)
@@ -196,7 +196,7 @@ if [ "$op" = "true" ]; then
 
     ./autogen.sh
 
-    ./configure --host=x86_64-linux-gnu --build=x86_64 --with-json-c-static --with-zmq-static --with-maxminddb-static
+    ./configure --host=aarch64-linux-gnu --build=aarch64 --with-json-c-static --with-zmq-static --with-maxminddb-static
 
     make -j $(nproc)
 
@@ -208,7 +208,7 @@ if [ "$op" = "true" ]; then
 
     autoreconf -vfi
 
-    ./configure --host=x86_64-linux-gnu
+    ./configure --host=aarch64-linux-gnu
 
     make -j $(nproc)
 
@@ -216,7 +216,7 @@ if [ "$op" = "true" ]; then
 
     cd "$libsdir/sqlite-autoconf-3510100"
 
-    ./configure --host=x86_64-linux-gnu \
+    ./configure --host=aarch64-linux-gnu \
                 --with-icu-ldflags="$ICU_LIBS" \
                 --with-icu-cflags="$ICU_CFLAGS" \
                 --icu-collations
@@ -244,8 +244,8 @@ fi
             --enable-tls \
             --with-libevent="$libsdir/libevent-2.1.12-stable" \
             --prefix="/usr/bin" \
-            --host=x86_64-linux-gnu \
-            --target=x86_64
+            --host=aarch64-linux-gnu \
+            --target=aarch64
 
      make -j $(nproc)
 
@@ -265,8 +265,8 @@ fi
                  --enable-proxy-fcgi \
                  --enable-heartbeat \
                  --enable-heartbeatmonitor \
-                 --host=x86_64-linux-gnu \
-                 --target=x86_64 \
+                 --host=aarch64-linux-gnu \
+                 --target=aarch64 \
                  --with-curl="$libsdir/curl-8.20.0" \
                  --with-pcre="/usr/bin/pcre2-config"
 
@@ -327,10 +327,10 @@ fi
     export PHP_INTL_STDCXX="-std=gnu++17"
     export PHP_INTL_CXX_FLAGS="$ICU_CXXFLAGS"
     export PATH="$PATH:$LD_LIBRARY_PATH"
-    export CC="/usr/bin/x86_64-linux-gnu-gcc"
-    export CXX="/usr/bin/x86_64-linux-gnu-gcc"
-    export CPP="/usr/bin/x86_64-linux-gnu-cpp"
-    export LD="/usr/bin/x86_64-linux-gnu-ld"
+    export CC="/usr/bin/aarch64-linux-gnu-gcc"
+    export CXX="/usr/bin/aarch64-linux-gnu-gcc"
+    export CPP="/usr/bin/aarch64-linux-gnu-cpp"
+    export LD="/usr/bin/aarch64-linux-gnu-ld"
     env
 
     cd "$libsdir/php-8.5.8/"
@@ -381,9 +381,9 @@ EOF
             --disable-cgi \
             --disable-debug \
             --disable-phpdbg-debug \
-            --build=x86_64 \
-            --target=x86_64 \
-            --host=x86_64-linux-gnu \
+            --build=aarch64 \
+            --target=aarch64 \
+            --host=aarch64-linux-gnu \
             --prefix=/usr/bin
 
      make -j $(nproc)
