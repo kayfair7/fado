@@ -92,15 +92,15 @@ if [ "$op" = "true" ]; then
 
     cd "$libsdir"
 
-#    rm -rf  "glibc-build" && mkdir "glibc-build"
+    rm -rf  "glibc-build" && mkdir "glibc-build"
 
-#    cd "glibc-build"
+    cd "glibc-build"
 
-#    /bin/bash "$libsdir/glibc-2.43/configure" --target=aarch64 --prefix="/usr/include/glibc" --srcdir="$libsdir/glibc-2.43"
+    /bin/bash "$libsdir/glibc-2.43/configure" --target=aarch64 --prefix="/usr/include/glibc" --srcdir="$libsdir/glibc-2.43"
 
-#    make -j $(nproc)
+    make -j $(nproc)
 
-#    make install
+    make install
 
     cd "$libsdir/openssl-4.0.0/"
 
