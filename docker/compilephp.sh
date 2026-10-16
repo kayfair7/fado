@@ -49,7 +49,7 @@ if [ "$down" = "true" ]; then
    wget -O "$libsdir/openssl.tar.gz" https://github.com/openssl/openssl/releases/download/openssl-4.0.0/openssl-4.0.0.tar.gz
    wget -O "$libsdir/gettext.tar.gz" https://ftp.gnu.org/pub/gnu/gettext/gettext-0.26.tar.gz
    wget -O "$libsdir/curl.tar.gz" https://curl.se/download/curl-8.20.0.tar.gz
-   wget -O "$libsdir/sqlite.tar.gz" https://sqlite.org/2025/sqlite-autoconf-3510100.tar.gz
+   wget -O "$libsdir/sqlite.tar.gz" https://sqlite.org/2026/sqlite-autoconf-3540000.tar.gz
    wget -O "$libsdir/ntp.tar.gz" https://downloads.nwtime.org/ntp/ntp-4.2.8p18.tar.gz
    wget -O "$libsdir/httpd.tar.gz" https://archive.apache.org/dist/httpd/httpd-2.4.66.tar.gz
    wget -O "$libsdir/gnupth.tar.gz" ftp://ftp.gnu.org/gnu/pth/pth-2.0.7.tar.gz
@@ -214,14 +214,16 @@ if [ "$op" = "true" ]; then
 
     make install
 
-    cd "$libsdir/sqlite-autoconf-3510100"
+    cd "$libsdir/sqlite-autoconf-3540000/"
 
-    export LIBS="-lpthread -lstdc++ -licutu -licuuc -licuio -licui18n -licudt78"
+    export LIBS="-lm -lpthread -lgcc -lstdc++ -licutu -licuuc -licuio -licui18n -licudt78"
 
     ./configure --host=aarch64-linux-gnu \
                 --with-icu-ldflags="$ICU_LIBS" \
                 --with-icu-cflags="$ICU_CFLAGS" \
-                --icu-collations
+                --icu-collations \
+                --disable-math
+
     make -j $(nproc)
 
     make install
@@ -297,8 +299,8 @@ fi
     export LIBXML_LIBS="-L$LIBSDIR/libxml2-v2.15.3"
     export OPENSSL_CFLAGS="-I$LIBSDIR/openssl-4.0.0/include"
     export OPENSSL_LIBS="-L$LIBSDIR/openssl-4.0.0"
-    export PHP_SQLITE_CFLAGS="-I$LIBSDIR/sqlite-autoconf-3510100/sqlite3.pc"
-    export PHP_SQLITE_LIBS="-L$LIBSDIR/sqlite-autoconf-3510100"
+    export PHP_SQLITE_CFLAGS="-I$LIBSDIR/sqlite-autoconf-3540000/sqlite3.pc"
+    export PHP_SQLITE_LIBS="-L$LIBSDIR/sqlite-autoconf-3540000/"
     export ICU_CFLAGS="-I$LIBSDIR/icu/source/i18n -I$LIBSDIR/icu/source/common -I$LIBSDIR/icu/source/io -I$LIBSDIR/icu/source/layout -I$LIBSDIR/icu/source/data -I$LIBSDIR/icu/source/stubdata -I$LIBSDIR/icu/source/tools"
     export ICU_LIBS="-L$LIBSDIR/icu/source/stubdata -L$LIBSDIR/icu/source/common -L$LIBSDIR/icu/source/i18n -L$LIBSDIR/icu/source/io -L$LIBSDIR/icu/source/data -L$LIBSDIR/icu/source/layout -L$LIBSDIR/icu/source/tools"
     export ONIG_CFLAGS="-I$LIBSDIR/onig-6.9.10/src"
@@ -309,8 +311,8 @@ fi
     export INTL_LIBS="-L$LIBSDIR/gettext-0.26/lib"
     export CURL_CFLAGS="-I$LIBSDIR/curl-8.20.0/include"
     export CURL_LIBS="-L$LIBSDIR/curl-8.20.0/lib"
-    export SQLITE_LIBS="-L$LIBSDIR/sqlite-autoconf-3510100"
-    export SQLITE_CFLAGS="-I$LIBSDIR/sqlite-autoconf-3510100"
+    export SQLITE_LIBS="-L$LIBSDIR/sqlite-autoconf-3540000"
+    export SQLITE_CFLAGS="-I$LIBSDIR/sqlite-autoconf-3540000"
     export NTP_LIBS="-L$LIBSDIR/ntp-4.2.8p18/lib"
     export NTP_CFLAGS="-I$LIBSDIR/ntp-4.2.8p18/include"
     export GNU_PTH="-L$LIBSDIR/pth-2.0.7"
@@ -319,7 +321,7 @@ fi
     export GLIBC_CFLAGS="-I/usr/include/glibc/include"
     export ALL_CFLAGS="$LIBXML_CFLAGS $OPENSSL_CFLAGS $GNU_CFLAGS $ICU_CFLAGS $ONIG_CFLAGS $ZLIB_CFLAGS $INTL_CFLAGS $CURL_CFLAGS $SQLITE_CFLAGS $NTP_CFLAGS $GLIBC_CFLAGS"
     export LDFLAGS="$GLIBC_LIBS $GNU_PTH $LIBXML_LIBS $OPENSSL_LIBS $ICU_LIBS $ONIG_LIBS $ZLIB_LIBS $INTL_LIBS $CURL_LIBS $SQLITE_LIBS $NTP_LIBS"
-    export LIBS="-lc -lz -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap -licutu -licuuc -licuio -licui18n -licudt78 -lonig"
+    export LIBS="-lgcc -lz -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap -licutu -licuuc -licuio -licui18n -licudt78 -lonig"
     export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/include:/usr/local/lib:/usr/local/include:/usr/bin:/bin:/usr/local/bin:$PKG_CONFIG_PATH"
     export CFLAGS="-O2 -nostartfiles -std=c17 -std=gnu17 -pthread $ALL_CFLAGS"
     export ICU_CFLAGS="$CFLAGS"
