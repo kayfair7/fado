@@ -105,7 +105,7 @@ class ListIterator implements \Iterator, \ArrayAccess {
     }
 
     public function offsetGet(mixed $offset) {
-        return isset($this->list[$offset]) ? $this->list[$offset] : null;
+        return isset($this->list[$offset]) ? $this->list[$offset] : array();
     }
 
     public function getItemsPerPage(): int {
@@ -117,7 +117,7 @@ class ListIterator implements \Iterator, \ArrayAccess {
         return $this;
     }
 
-    public function resetKeys(): void {
+    public function resetKeys() {
         $tmpList = array();
         $xkey = 0;
         foreach ($this->list as $listItem) {
@@ -125,6 +125,7 @@ class ListIterator implements \Iterator, \ArrayAccess {
             $xkey++;
         }
         $this->list = $tmpList;
+        return $this;
     }
 
     public function setActivePos(mixed $key): void {
