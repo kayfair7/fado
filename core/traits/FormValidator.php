@@ -1,7 +1,6 @@
 <?php
 
 namespace Fado\Core;
-use Fado\Core\Request as FormValidatorTraitParent;
 
 trait FormValidator {
 
@@ -37,13 +36,7 @@ trait FormValidator {
             if (!$validationConf[1] && $data[$field] == null) {
                 continue;
             }
-            if (function_exists('\\' . $validationConf[0])) {
-                if (call_user_func($validationConf[0], $data[$field]) == false) {
-                    $message[$field] = $validationConf[2];
-                }
-                continue;
-            }
-            if (function_exists('FormValidatorTraitParent::' . $validationConf[0])) {
+            if (method_exists($this, $validationConf[0])) {
                 if (static::{$validationConf[0]}($data[$field]) == false) {
                     $message[$field] = $validationConf[2];
                 }
