@@ -104,7 +104,7 @@ class ListIterator implements \Iterator, \ArrayAccess {
         $this->next();
     }
 
-    public function offsetGet(mixed $offset): int {
+    public function offsetGet(mixed $offset) {
         return isset($this->list[$offset]) ? $this->list[$offset] : null;
     }
 
