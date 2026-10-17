@@ -96,7 +96,7 @@ class ListIterator implements \Iterator, \ArrayAccess {
     }
 
     public function offsetExists(mixed $offset): bool {
-        return isset($this->list[array_search($offset, $this->keys)]);
+        return isset($this->list[$offset]);
     }
 
     public function offsetUnset(mixed $offset): void {
