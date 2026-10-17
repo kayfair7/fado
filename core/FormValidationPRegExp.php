@@ -6,6 +6,7 @@ use \Fado\Model\Setting as Setting;
 $availInvoiceMode = json_decode(Setting::get('invoice_mode_available'));
 $itemAmountUnits = json_decode(Setting::get('item_amount_units'));
 $availLang = json_decode(Setting::get('lang_available'));
+$availDateFormat = json_decode(Setting::get('date_time_format_available'));
 $timeZones = View::getAvailableTimeZones();
 $currencies = Setting::getCurrencies();
 
@@ -25,8 +26,8 @@ define('VALIDATION_REGEX_ARRAY_SETTINGUSER_DATA_FIELDS', array(
     'lang' => array('@' . join('|', $availLang) . '@', true, 'ERROR_FIELD_INVALID'),
     'currency' => array('/[0-9]{1,2}/', true, 'ERROR_FIELD_INVALID'),
     'timezone' => array('@' . join('|', $timeZones) . '@', true, 'ERROR_FIELD_INVALID'),
-    'date_time_format' => array('validateDate', true, 'ERROR_FIELD_INVALID'),
-    'date_format' => array('validateDate', true, 'ERROR_FIELD_INVALID'),
+    'date_time_format' => array('@' . join('|', $availDateFormat) . '@', true, 'ERROR_FIELD_INVALID'),
+    'date_format' => array('@' . join('|', $availDateFormat) . '@', true, 'ERROR_FIELD_INVALID'),
     'invoice_mode' => array('@' . join('|', $availInvoiceMode) . '@', true, 'ERROR_FIELD_INVALID')
 ));
 
