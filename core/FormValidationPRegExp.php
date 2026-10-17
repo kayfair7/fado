@@ -6,7 +6,7 @@ use \Fado\Model\Setting as Setting;
 $availInvoiceMode = json_decode(Setting::get('invoice_mode_available'));
 $itemAmountUnits = json_decode(Setting::get('item_amount_units'));
 $availLang = json_decode(Setting::get('lang_available'));
-$availDateFormat = json_decode(Setting::get('date_time_format_available'));
+$availDateFormat = (array) json_decode(Setting::get('date_time_format_available'));
 $timeZones = View::getAvailableTimeZones();
 $currencies = Setting::getCurrencies();
 
