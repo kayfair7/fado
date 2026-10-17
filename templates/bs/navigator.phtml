@@ -138,7 +138,7 @@ $printMode = false;
         selectRoute();
 
         $('.route-select option').each(function() {
-            $(this).on('mousedown', function(event) {
+            $(this).on('mousedown touchdown', function(event) {
                 selectRoute();
             });
         });
