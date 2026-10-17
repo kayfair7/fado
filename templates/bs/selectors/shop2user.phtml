@@ -8,7 +8,7 @@
             <?php
                 foreach($allShops->get() as $shop) {
             ?>
-                <option value="<?php echo $shop['sid']; ?>" <?php echo ($assignedShops->current()['shop_id'] == $shop['sid']) ? 'selected="selected"' : ''; ?>><?php echo $shop['description']; ?></option>
+                <option value="<?php echo $shop['sid']; ?>" <?php echo ($assignedShops['shop_id'] == $shop['sid']) ? 'selected="selected"' : ''; ?>><?php echo $shop['description']; ?></option>
             <?php
                 }
             ?>
