@@ -99,12 +99,10 @@ class Router {
             $invoices = new \Fado\Controller\Source\Invoices($request, $rights);
             $vehicles2Shop = new \Fado\Controller\Source\Vehicles2Shop($request, $rights);
 
-            $shops->getModel()->setOrder('location', 'ASC');
-            $shopList = $shops->get()->resetKeys();
-            $vehicles2Shop->getModel()->setOrder('location', 'ASC');
-            $allVehiclesList = $vehicles2Shop->getAll()->resetKeys();
-            $allInvoicesList = $invoices->getAll()->resetKeys();
-            $allItemsList = $warehouseItems->getAll()->resetKeys();
+            $shopList = $shops->getAll();
+            $allVehiclesList = $vehicles2Shop->getAll();
+            $allInvoicesList = $invoices->getAll();
+            $allItemsList = $warehouseItems->getAll();
 
             if ((bool)$request->getParameter('print')) {
                 $view->includeTemplate('print/navigator', array('shops' => $shopList, 'vehicles' => $allVehiclesList, 'invoices' => $allInvoicesList, 'warehouseitems' => $allItemsList));
