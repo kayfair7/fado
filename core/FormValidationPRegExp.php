@@ -66,7 +66,7 @@ define('VALIDATION_REGEX_ARRAY_SHOP_LOCATION_DATA_FIELDS', array(
 
 define('VALIDATION_REGEX_ARRAY_USER_DATA_FIELDS', array(
     'name' => array('/^[a-zA-Z0-9\W]+$/', true, 'ERROR_FIELD_INVALID'),
-    'pwd' => array('/^[a-zA-Z0-9\W]+$/', false, 'ERROR_FIELD_INVALID'),
+    'pwd' => array('/^[a-zA-Z0-9\W]+$/', true, 'ERROR_FIELD_INVALID'),
     'active' => array('/^[0,1]{0,1}$/', false, 'ERROR_FIELD_INVALID'),
     'phone' => array('/^[+ 0-9]+$/', false, 'ERROR_FIELD_INVALID'),
     'email' => array('/^[a-zA-Z0-9\W]+?@[a-zA-Z0-9\W]+?.[a-zA-Z]{2}$/', false, 'ERROR_FIELD_EMAIL_INVALID'),
