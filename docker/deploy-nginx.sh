@@ -92,6 +92,10 @@ EOF
 
 echo "Configure and start Nginx and PHP FPM"
 
+cat <<EOF >> "$PWD/.htaccess"
+
+EOF
+
 touch /run/php/php8.4-fpm.sock
 rm /etc/nginx/sites-available/default
 unlink /etc/nginx/sites-enabled/default
@@ -111,18 +115,18 @@ server {
     error_log  /var/log/nginx/error.log;
 
 
-    rewrite ^/(.+?)/.*$ /index.php?page=$1 last;
+    rewrite ^/(.+?)/.*\$ /index.php?page=\$1 last;
 
     location / {
-        try_files $uri $uri/ /index.php?$query_string;
+        try_files \$uri \$uri/ /index.php?\$query_string;
     }
 
-    location ~ \.(php|phtml)$ {
+    location ~ \.(php|phtml)\$ {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/run/php/php8.4-fpm.sock;
     }
 
-    location ~ \.(htpass|csv|md|sql|sh|yml)$ {
+    location ~ \.(htaccess|csv|md|sql|sh|yml|conf|gz)\$ {
         deny all;
     }
 }

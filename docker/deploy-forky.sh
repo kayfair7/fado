@@ -133,7 +133,7 @@ ServerName fado.org
             RewriteRule "/(.*)" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
-        <FilesMatch "\.(csv|md|yml|sql|sh|log|conf)$">
+        <FilesMatch "\.(htaccess|csv|md|yml|sql|sh|log|conf|gz)\$">
             Require all denied
         </FilesMatch>
 
@@ -168,7 +168,7 @@ ServerName fado.org
         SSLCertificateChainFile ~/SSL/ca.chain.pem
         SSLCertificateKeyFile ~/SSL/key.pem
 
-        <FilesMatch "\.(csv|yml|md|sql|sh|log|conf)$">
+        <FilesMatch "\.(htaccess|csv|yml|md|sql|sh|log|conf|gz)\$">
             Require all denied
         </FilesMatch>
 

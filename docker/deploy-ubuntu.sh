@@ -87,6 +87,10 @@ charset;utf8
 socket;/var/mysqld/mysqld.pid
 EOF
 
+cat <<EOF >> "$PWD/.htaccess"
+
+EOF
+
 echo "Configure and start Apache2 and PHP FPM"
 
 rm /etc/apache2/sites-available/*
@@ -109,7 +113,7 @@ ServerName fado.org
         </IfModule>
 
         <IfModule mod_proxy_fcgi.c>
-            <FilesMatch "\.php$|\.phtml$">
+            <FilesMatch "\.(php|phtml)\$">
                 SetHandler application/x-httpd-php
                 SetHandler "proxy:unix:/var/run/php/php8.3-fpm.pid|fcgi://localhost/"
             </FilesMatch>
@@ -130,7 +134,7 @@ ServerName fado.org
             RewriteRule "/(.*)" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
-        <FilesMatch "\.(csv|md|sql|sh|log|yml|conf)$">
+        <FilesMatch "\.(htaccess|csv|md|sql|sh|log|yml|conf|gz)\$">
             Require all denied
         </FilesMatch>
 
@@ -150,7 +154,7 @@ ServerName fado.org
         </IfModule>
 
        <IfModule mod_proxy_fcgi.c>
-            <FilesMatch "\.php$|\.phtml$">
+            <FilesMatch "\.(php|phtml)$">
                 SetHandler application/x-httpd-php
                 SetHandler "proxy:unix:/var/run/php/php8.3-fpm.pid|fcgi://localhost/"
             </FilesMatch>
@@ -164,11 +168,11 @@ ServerName fado.org
         </IfModule>
 
         SSLEngine on
-        SSLCertificateFile /home/fado/Desktop/SSL/ca.pem
-        SSLCertificateChainFile /home/fado/Desktop/SSL/ca.chain.pem
-        SSLCertificateKeyFile /home/fado/Desktop/SSL/key.pem
+        SSLCertificateFile /home/fado/SSL/ca.pem
+        SSLCertificateChainFile /home/fado/SSL/ca.chain.pem
+        SSLCertificateKeyFile /home/fado/SSL/key.pem
 
-        <FilesMatch "\.(csv|md|sql|sh|log|yml|conf)$">
+        <FilesMatch "\.(htaccess|csv|md|sql|sh|log|yml|conf|gz)\$">
             Require all denied
         </FilesMatch>
 
