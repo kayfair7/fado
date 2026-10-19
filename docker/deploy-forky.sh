@@ -130,7 +130,7 @@ ServerName fado.org
             RewriteEngine on
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule "/(.*)" "/index.php?page=\$1" [L,QSA]
+            RewriteRule "/(.{1-})" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
         <FilesMatch "\.(htaccess|csv|md|yml|sql|sh|log|conf|gz)\$">
@@ -160,7 +160,7 @@ ServerName fado.org
             RewriteEngine on
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule "/(.*)" "/index.php?page=\$1" [L,QSA]
+            RewriteRule "/(.{1-})" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
         SSLEngine on

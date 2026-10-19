@@ -115,7 +115,7 @@ server {
     error_log  /var/log/nginx/error.log;
 
 
-    rewrite ^/(.+?)/.*\$ /index.php?page=\$1 last;
+    rewrite ^/(.{1-}?)/.*\$ /index.php?page=\$1 last;
 
     location / {
         try_files \$uri \$uri/ /index.php?\$query_string;
