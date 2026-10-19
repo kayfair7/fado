@@ -1,11 +1,9 @@
 #!/bin/bash
 #
 #
-# echo "fado" > ~/hostname
-# tar xvfz $PWD/proc.tar.gz
-# udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/fado/:/var/www/localhost/htdocs" --nosysdirs --volume="/data/data/com.termux/files/home/git/fado/docker/proc:/proc" --volume=/dev --volume=/sys --volume="/data/data/com.termux/files/home/hostname:/etc/hostname" alpine:latest /bin/busybox sh
-# cd /var/www/localhost/htdocs/docker
-# busybox sh deploy-alpine.sh
+# tar xvfz ~/proc.tar.gz
+# udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/fado/:/var/www/localhost/htdocs" --nosysdirs --volume="/data/data/com.termux/files/home/proc:/proc" --volume=/dev --volume=/sys alpine:latest /bin/busybox sh
+# busybox sh /var/www/localhost/htdocs/docker/deploy-alpine.sh
 
 echo "nameserver 74.82.42.42" > /etc/resolv.conf
 echo "fado-srv" > /etc/hostname
@@ -30,7 +28,6 @@ if [ -f /var/www/isdeployed ]; then
     /etc/init.d/networking -U restart
     /etc/init.d/rngd -U restart
     /etc/init.d/fcgiwrap -U restart
-    /etc/conf.d/spawn-fcgi.trac -U restart
     /etc/init.d/apache2 -U restart
     /etc/init.d/php-fpm85 -U restart
     /etc/init.d/memcached -U restart
@@ -42,10 +39,13 @@ fi
 echo "Download & install packages"
 
 apk add nano wget git openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd abuild bc binutils bison build-base cmake make gcc ncurses-dev ca-certificates wget runit gcompat bash-completion android-tools-bash-completion linux-headers flexget flex flex-dev
-chown -Rvf apache:apache $PWD
-chmod -Rvf 770 $PWD
+
+chown -Rvf apache:apache /var/www/localhost/htdocs
+chmod -Rvf 770 /var/www/localhost/htdocs
 chmod -Rvf 770 /var
 chmod -Rvf 770 /srv
+
+#compile modules
 cd /srv
 wget -nc https://github.com/torvalds/linux/archive/refs/tags/v7.2.tar.gz
 tar xvf v7.2.tar.gz
@@ -65,8 +65,6 @@ unlink /lib/modules/15
 ln -s /lib/modules/4.20.17 /lib/modules/15
 depmod -a
 mkinitfs
-ln -s spawn-fcgi /etc/init.d/spawn-fcgi.trac
-cp /etc/conf.d/spawn-fcgi /etc/conf.d/spawn-fcgi.trac
 
 echo "Start & prepare MariaDB"
 
@@ -127,7 +125,7 @@ SharememPath /dev/shm
         DocumentRoot /var/www/localhost/htdocs
         ServerName fado.org
 
-        <FilesMatch "\.(php|phtml)$">
+        <FilesMatch "\.(php|phtml)\$">
             SetHandler application/x-httpd-php
             SetHandler "proxy:fcgi://127.0.0.1:9000"
             Allow from all
@@ -144,7 +142,7 @@ SharememPath /dev/shm
             <IfModule mod_rewrite.c>
                 RewriteEngine on
                 RewriteCond "%{HTTPS}" on
-                RewriteRule "^/?(.*)" "https://%{SERVER_NAME}/$1" [L,R=301]
+                RewriteRule "^/?(.*)" "https://%{SERVER_NAME}/\$1" [L,R=301]
             </IfModule>
         </IfModule>
 
@@ -152,10 +150,10 @@ SharememPath /dev/shm
             RewriteEngine on
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule "/(.*)/$" "/index.php?page=$1" [L,QSA]
+            RewriteRule "/(.*)\$" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
-        <FilesMatch "\.(csv|md|sql|sh|log|gz|yml|conf)$">
+        <FilesMatch "\.(htaccess|csv|md|sql|sh|log|gz|yml|conf|gz)\$">
             Require all denied
         </FilesMatch>
 
@@ -168,7 +166,7 @@ SharememPath /dev/shm
         DocumentRoot /var/www/localhost/htdocs
         ServerName fado.org
 
-        <FilesMatch "\.(php|phtml)$">
+        <FilesMatch "\.(php|phtml)\$">
             SetHandler application/x-httpd-php
             SetHandler "proxy:fcgi://127.0.0.1:9000"
             Allow from all
@@ -184,7 +182,7 @@ SharememPath /dev/shm
             RewriteEngine on
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule "/(.*)/$" "/index.php?page=$1" [L,QSA]
+            RewriteRule "/(.*)\$" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
         SSLEngine on
@@ -192,7 +190,7 @@ SharememPath /dev/shm
         SSLCertificateChainFile ~/SSL/ca.chain.pem
         SSLCertificateKeyFile ~/SSL/key.pem
 
-        <FilesMatch "\.(csv|md|sql|sh|log|gz|yml|conf)$">
+        <FilesMatch "\.(htaccess|csv|md|sql|sh|log|gz|yml|conf)\$">
             Require all denied
         </FilesMatch>
 
@@ -211,7 +209,6 @@ rm /etc/apache2/conf.d/ssl.conf
 /etc/init.d/networking -U restart
 /etc/init.d/rngd -U restart
 /etc/init.d/fcgiwrap -U restart
-/etc/conf.d/spawn-fcgi.trac -U restart
 /etc/init.d/apache2 -U restart
 /etc/init.d/php-fpm85 -U restart
 /etc/init.d/memcached -U restart
