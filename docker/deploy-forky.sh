@@ -122,7 +122,7 @@ ServerName fado.org
             <IfModule mod_rewrite.c>
                 RewriteEngine on
                 RewriteCond "%{HTTPS}" on
-                RewriteRule "^/?(.*)" "https://%{SERVER_NAME}/$1" [L,R=301]
+                RewriteRule "^/?(.*)" "https://%{SERVER_NAME}/\$1" [L,R=301]
             </IfModule>
         </IfModule>
 
@@ -130,10 +130,10 @@ ServerName fado.org
             RewriteEngine on
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule "/(.*)/$" "/index.php?page=$1" [L,QSA]
+            RewriteRule "/(.*)" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
-        <FilesMatch "\.(csv|md|yml|sql|sh|log)$">
+        <FilesMatch "\.(csv|md|yml|sql|sh|log|conf)$">
             Require all denied
         </FilesMatch>
 
@@ -160,7 +160,7 @@ ServerName fado.org
             RewriteEngine on
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule "/(.*)/$" "/index.php?page=$1" [L,QSA]
+            RewriteRule "/(.*)" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
         SSLEngine on
@@ -168,7 +168,7 @@ ServerName fado.org
         SSLCertificateChainFile ~/SSL/ca.chain.pem
         SSLCertificateKeyFile ~/SSL/key.pem
 
-        <FilesMatch "\.(csv|yml|md|sql|sh|log)$">
+        <FilesMatch "\.(csv|yml|md|sql|sh|log|conf)$">
             Require all denied
         </FilesMatch>
 
