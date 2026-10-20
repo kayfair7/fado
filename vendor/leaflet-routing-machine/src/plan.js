@@ -291,7 +291,6 @@
 		},
 
 		_dragNewWaypoint: function(newWpIndex, initialLatLng) {
-			newWpIndex = (newWpIndex === 0) ? 1 : newWpIndex;
 			var wp = new Waypoint(initialLatLng),
 				prevWp = this._waypoints[newWpIndex - 1],
 				nextWp = this._waypoints[newWpIndex],
