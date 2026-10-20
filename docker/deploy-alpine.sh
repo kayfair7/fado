@@ -141,7 +141,7 @@ SharememPath /dev/shm
         <IfModule mod_ssl.c>
             <IfModule mod_rewrite.c>
                 RewriteEngine on
-                RewriteCond "%{HTTPS}" on
+                RewriteCond "%{HTTPS}" !=on
                 RewriteRule "^/?(.*)" "https://%{SERVER_NAME}/\$1" [L,R=301]
             </IfModule>
         </IfModule>
