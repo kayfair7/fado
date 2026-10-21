@@ -8,7 +8,7 @@ class User extends FadoModel {
 
     protected $relation2user = 'fado_shops2user';
 
-    protected $masterQuery = 'SELECT tbl.id AS id, tbl.id AS sid, stbl.id AS shop_id, session, active, online, name, pwd, salt, tbl.phone, tbl.email, data, birthday, tbl.created, tbl.changed, tbl.last_login, tbl.created AS user_created, tbl.changed AS user_changed, stbl.phone AS shop_phone, stbl.email AS shop_email,  description, city, zip, street, streetnr, country, opening_hours, established FROM fado_user AS tbl LEFT OUTER JOIN fado_shops2user AS rel ON tbl.id = rel.user_id LEFT OUTER JOIN fado_shops AS stbl ON stbl.id = rel.shop_id';
+    protected $masterQuery = 'SELECT tbl.id AS id, tbl.id AS sid, stbl.id AS shop_id, session, active, online, name, pwd, salt, tbl.phone, tbl.email, data, birthday, urtbl.rights, tbl.created, tbl.changed, tbl.last_login, tbl.created AS user_created, tbl.changed AS user_changed, stbl.phone AS shop_phone, stbl.email AS shop_email,  description, city, zip, street, streetnr, country, opening_hours, established FROM fado_user AS tbl LEFT OUTER JOIN fado_shops2user AS rel ON tbl.id = rel.user_id LEFT OUTER JOIN fado_shops AS stbl ON stbl.id = rel.shop_id LEFT OUTER JOIN fado_user_rights AS urtbl ON urtbl.user_id = tbl.id';
 
     /*
      * function used for generating hash out of value
@@ -36,6 +36,12 @@ class User extends FadoModel {
         return $query->fetch();
     }
 
+    public function getBySession($session) {
+        $query = $this->prepare($this->masterQuery . ' WHERE session=:session');
+        $query->execute(array(':session' => $session));
+        return $query->fetch();
+    }
+
     public function getByShopId($shopId) {
         $query = $this->prepare($this->masterQuery . ' WHERE stbl.id=:shop_id');
         $query->execute(array(':shop_id' => $shopId));
@@ -47,7 +53,7 @@ class User extends FadoModel {
         $query->execute(array(':name' => $data['name']));
         $result = $query->fetch();
         if ($query->rowCount() > 0) {
-//            return $this->update($data);
+            return $this->update($data);
             return false;
         }
         $data['salt'] = $this->hash();
@@ -89,7 +95,7 @@ class User extends FadoModel {
     }
 
     public function login($id) {
-        $query = $this->prepare('UPDATE ' . $this->relation . ' SET online="1", session=IF(session IS NULL, :hash, session) WHERE name LIKE :id OR id=:id');
+        $query = $this->prepare('UPDATE ' . $this->relation . ' SET online="1", session=:hash WHERE name LIKE :id OR id=:id');
         $query->execute(array(':id' => $id, ':hash' => $this->hash()));
         $this->updateLastLogin($id);
         return $this->get($id);

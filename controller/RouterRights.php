@@ -4,21 +4,21 @@ namespace Fado\Controller;
 
 use \Fado\Model\Cache as Cache;
 
-/*        
- *  PAGENAME        =>    SHORT
- *  ajax             => aj
- *  information     => if
- *  settings        => st
- *  shop           => sh
- *  vehicles        => ve
- *  warehouse        => wa
- *  invoices        => in
- *  newinvoice     => ne
- *  navigator        => na
- *  meetings        => me
- *  user           => us
- *  usersettings     => ut
- *  sqladmin        => sq
+/*
+ *  PAGENAME      =>    SHORT
+ *  ajax          => aj
+ *  information   => if
+ *  settings      => st
+ *  shop          => sh
+ *  vehicles      => ve
+ *  warehouse     => wa
+ *  invoices      => in
+ *  newinvoice    => ne
+ *  navigator     => na
+ *  meetings      => me
+ *  user          => us
+ *  usersettings  => ut
+ *  sqladmin      => sq
  *  adminsettings => at
  *  userrights    => ur
  *
@@ -87,9 +87,10 @@ class RouterRights extends Source\FadoController {
         if ($page == '') {
             $page = 'sh';
         }
-        $rights = $this->getRoutingRights($this->userController->getLoggedInUser()['sid']);
+        $rights = $this->getRoutingRights($this->userController->getLoggedInUser());
 
-        if ($rights != null && array_key_exists($page, $rights) && $rights[$page] == $action) {
+        if ((int)$rights[$page] >= $action) {
+
             return true;
         }
         if ($redirect) {
@@ -99,15 +100,15 @@ class RouterRights extends Source\FadoController {
     }
 
     public function getAllowedLevel($page) {
-        $rights = $this->getRoutingRights($this->userController->getLoggedInUser()['sid']);
+        $rights = $this->getRoutingRights($this->userController->getLoggedInUser());
         if ($rights != null && array_key_exists($page, $rights)) {
             return $rights[$page];
         }
         return static::$NONE;
     }
 
-    public function getRoutingRights($userId) {
-        return json_decode($this->model->get($userId)['rights'], true);
+    public function getRoutingRights($user) {
+        return (array)json_decode($user['rights']);
     }
 
     public function redirect() {
