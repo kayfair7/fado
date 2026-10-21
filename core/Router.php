@@ -33,8 +33,6 @@ class Router {
     public function route() {
         $request = new Request();
         $user = new \Fado\Controller\Source\Users($request);
-        $rights = new \Fado\Controller\RouterRights($request, $user);
-        $pages = new \Fado\Controller\Filter\Paginator($request, $rights);
 
         if ($user->getLoggedInUser() !== false) {
             $userId = $user->getLoggedInUser()['sid'];
@@ -44,25 +42,30 @@ class Router {
         if (is_int($userId)) {
             Settings::setUserId($userId);
         }
-        $user->setRightsController($rights);
 
+        $rights = new \Fado\Controller\RouterRights($request, $user);
+        $pages = new \Fado\Controller\Filter\Paginator($request, $rights);
+        $user->setRightsController($rights);
         $listDefaultCount = (int)Settings::get('list_count_single');
 
         $view = new View($rights);
-
         if ((int)Settings::get('rewrite_route')) {
             $this->urlRewrite();
         }
         $page = $request->getParameter('page');
 
-        if ($user->checkLogin() == false) {
+        if ($userId == null && $user->checkLogin() == false) {
             $view->includeTemplate('login', array());
             return;
         }
-
-        if (!$rights->get() && in_array($page, USER_RIGHTS_AREAS)) {
+        if (!$rights->isAllowed($page, 1, false)) {
             $rights->redirect();
+
             return;
+        }
+
+        if ($page == '') {
+            $page = 'sh';
         }
 
         // ajax
@@ -185,13 +188,14 @@ class Router {
         }
 
         // shops
-        if (in_array($page, array(false, 'sh'), true)) {
+        if ($page == 'sh') {
             $shops = new \Fado\Controller\Source\Shops($request, $rights);
+echo 999;
             $sort = new \Fado\Controller\Filter\Sorting($request, $shops);
             $search = new \Fado\Controller\Source\Search($request, $rights, $shops);
             $vehicles2Shop = new \Fado\Controller\Source\Vehicles2Shop($request, $rights);
             $users2Shop = new \Fado\Controller\Source\Users2Shop($request, $rights);
-
+echo 4444;
             $sort->filter();
             $pages->filter();
             $allVehiclesList = $vehicles2Shop->getAll(true);

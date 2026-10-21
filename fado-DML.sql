@@ -166,6 +166,7 @@ INSERT INTO `fado_settings` (`id`, `name`, `value`, `changed`, `created`) VALUES
 (17,	'rewrite_route',	'0',	NULL,	'2023-05-07 12:40:28'),
 (18,	'date_format_available',	'{\"en_GB\":\"%Y/%m/%d\",\"en_US\":\"%d-%m-%Y\",\"UTC\":\"%x\",\"UTC2\":\"%a, %d. %b %Y\",\"UTC3\":\"%A %d. %B %Y\",\"de_DE\":\"%d.%m.%Y\"}',	NULL,	'2023-05-07 12:40:28'),
 (19,	'maximum_login_attempts',	'5',	NULL,	'2023-05-07 12:40:28');
+(20,    'list_count_single',       '2', NULL, '2024-01-01 12:12:27');
 
 DROP TABLE IF EXISTS `fado_shops`;
 CREATE TABLE `fado_shops` (
@@ -274,7 +275,7 @@ CREATE TABLE `fado_user` (
 
 INSERT INTO `fado_user` (`id`, `active`, `online`, `name`, `pwd`, `salt`, `session`, `phone`, `email`, `data`, `birthday`, `created`, `changed`, `last_login`) VALUES
 (1,	1,	1,	'fado',	'c97d276995ea76933457f0dcb166d9ac19617dd935a09a17e6902c359ca14bdb',	'228961714662627273737737337372948738211738',	'f103350b677aeb2f6d23f30c2f4004d8ba156dcdb7a2be711e6e0c489f701896',	'0049111222333',	'fado@fado.com',	'\"<p><span style=\\\"color:#3498db\\\"><em>Superadmin<\\/em><\\/span><\\/p>\\r\\n\"',	'2043-01-22',	'2019-08-09 12:37:03',	'2025-09-15 03:09:12',	'2025-09-15 03:09:12'),
-(6,	1,	0,	'admin',	'1dcf823fa422dcd13a55ee34a8a697204a3cd0ee51342f457cbfb3b9818beade',	'b1eb2b6481fa3ec2f2220a4b2c5ea683e8fffdaa3ceca1c481313eb7143e4910',	'',	'',	'admin@fado.com',	'\"<p><span style=\\\"color:#c0392b\\\"><em>Administrator&nbsp;<\\/em><\\/span><\\/p>\\r\\n\"',	'1971-05-23',	'2019-12-10 11:45:49',	'2025-06-25 02:28:40',	'2025-06-24 22:37:08');
+(6,	1,	0,	'admin',	'b7b06d701dac5748d60da7408344b5b4ac5e98756285c5a4fb9acb2a04ceab5e',	'b7b06d701dac5748d60da7408344b5b4ac5e98756285c5a4fb9acb2a04ceab5e',	'',	'',	'admin@fado.com',	'\"<p><span style=\\\"color:#c0392b\\\"><em>Administrator&nbsp;<\\/em><\\/span><\\/p>\\r\\n\"',	'1971-05-23',	'2019-12-10 11:45:49',	'2025-06-25 02:28:40',	'2025-06-24 22:37:08');
 -- 2025-09-15 01:09:43 UTC
 
 DROP TABLE IF EXISTS `fado_user_ip`;
@@ -355,6 +356,19 @@ INSERT INTO `fado_user_settings` (`id`, `user_id`, `name`, `value`, `changed`, `
 (11,	1,	'list_count_single',	'3',	'2025-06-25 05:21:53',	'2025-06-25 05:21:53'),
 (12,	1,	'time_format',	'%H:%M:%S',	'2025-07-30 16:41:35',	'2025-06-25 12:52:58'),
 (79,	1,	'date_format',	'%Y/%m/%d',	'2025-07-30 16:41:22',	'2025-06-25 12:52:58');
+(88,    6,      'lang', 'es_ES',        '2025-06-25 05:21:53', '2025-06-25 05:21:53'),
+(89,    6,      'timezone',     'Europe/Ulyanovsk',     '2025-06-25 05:21:53',  '2025-06-25 05:21:53'),
+(90,    6,      'number_format',        '[\"2\",\".\",\"\\u00a0,\"]',   '2025-06-25 05:21:53',  '2025-06-25 05:21:53'),
+(91,    6,      'date_time_format',     '%Y/%m/%d %H:%M:%S',   '2025-07-30 16:41:11',   '2025-06-25 12:52:43'),
+(92,    6,      'item_amount_units',    '[\"100g\",\"50g\",\"100ml\",\"1m\\u00b3\",\"1m\\u00b2\",\"1cl\",\"1oz\",\"1kg\",\"100kg\",\"500ml\",\"1l\",\"10l\",\"1mg\",\"500mg\",\"50mg\",\"1box\",\"1pcs\",\"1l \\u212e\"]',      '2025-06-25 05:21:53',  '2025-06-25 05:21:53'),
+(93,    6,      'display_errors',       '0',    '2025-06-25 05:21:53',  '2025-06-25 06:46:41'),
+(94,    6,      'currency',     '4',    '2025-06-25 05:21:53', '2025-06-25 05:21:53'),
+(95,    6,      'tax_rates',    '[\"8\",\"18\",\"0\",\"9\",\"17\"]',    '2025-06-25 05:21:53',  '2025-06-25 05:21:53'),
+(96,    6,      'invoice_mode', 'brutto',       '2025-06-25 05:21:53',  '2025-06-25 05:21:53'),
+(97,    6,      'vat_on',       '1',    '2025-06-25 05:21:53', '2025-06-25 05:21:53'),
+(98,    6,      'list_count_single',    '3',    '2025-06-25 05:21:53',  '2025-06-25 05:21:53'),
+(99,    6,      'time_format',  '%H:%M:%S',     '2025-07-30 16:41:35',  '2025-06-25 12:52:58'),
+(100,    6,      'date_format',  '%Y/%m/%d',     '2025-07-30 16:41:22',  '2025-06-25 12:52:58');
 
 DROP TABLE IF EXISTS `fado_vehicles`;
 CREATE TABLE `fado_vehicles` (
