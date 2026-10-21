@@ -21,12 +21,13 @@ Manage shops, vehicles and commodities in administration panel. Calculate invoic
 The Apache config file and SSL keys are linked in the volume section of the `docker-compose.yml`. Activate HTTPS with `/usr/sbin/a2enmod ssl`.
 
 ## Start in Termux App
-Compatible with Android and Termux App utilizing udocker on ARM CPU.
+Compatible with Android and Termux App.
 
-    pkg add udocker python proot
+    pkg add git udocker python proot
     udocker install
-    cp docker/udocker.conf ~/.udocker/
-    udocker run --platform="linux/arm/v7" --volume="/data/data/com.termux/files/home/fado/:/var/www/html/" debian:latest /bin/bash
+    git clone https://github.com/kayfair7/fado.git
+    cp fado/docker/udocker.conf ~/.udocker/
+    udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/fado/:/var/www/html/" debian:latest /bin/bash
     /bin/bash /var/www/html/docker/deploy-forky.sh
 
 ## User
