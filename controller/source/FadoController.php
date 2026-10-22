@@ -19,7 +19,7 @@ class FadoController implements FadoInterface {
         $this->rightsController = $rightsController;
         $this->model = null;
         $this->controller = null;
-   }
+    }
 
     public function get(?\Fado\Core\ListIterator $list) {
         return $list;
