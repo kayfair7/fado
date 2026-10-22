@@ -165,7 +165,7 @@ INSERT INTO `fado_settings` (`id`, `name`, `value`, `changed`, `created`) VALUES
 (16,	'map_route_url',	'router.project-osrm.org/route/v1',	NULL,	'2023-05-07 12:40:28'),
 (17,	'rewrite_route',	'0',	NULL,	'2023-05-07 12:40:28'),
 (18,	'date_format_available',	'{\"en_GB\":\"%Y/%m/%d\",\"en_US\":\"%d-%m-%Y\",\"UTC\":\"%x\",\"UTC2\":\"%a, %d. %b %Y\",\"UTC3\":\"%A %d. %B %Y\",\"de_DE\":\"%d.%m.%Y\"}',	NULL,	'2023-05-07 12:40:28'),
-(19,	'maximum_login_attempts',	'5',	NULL,	'2023-05-07 12:40:28'),
+(19,	'maximum_login_attempts',	'5',	NULL,	'2023-05-07 12:40:28');
 (20,    'list_count_single',       '2', NULL, '2024-01-01 12:12:27');
 
 DROP TABLE IF EXISTS `fado_shops`;
@@ -355,7 +355,7 @@ INSERT INTO `fado_user_settings` (`id`, `user_id`, `name`, `value`, `changed`, `
 (10,	1,	'vat_on',	'1',	'2025-06-25 05:21:53',	'2025-06-25 05:21:53'),
 (11,	1,	'list_count_single',	'3',	'2025-06-25 05:21:53',	'2025-06-25 05:21:53'),
 (12,	1,	'time_format',	'%H:%M:%S',	'2025-07-30 16:41:35',	'2025-06-25 12:52:58'),
-(79,	1,	'date_format',	'%Y/%m/%d',	'2025-07-30 16:41:22',	'2025-06-25 12:52:58'),
+(79,	1,	'date_format',	'%Y/%m/%d',	'2025-07-30 16:41:22',	'2025-06-25 12:52:58');
 (88,    6,      'lang', 'es_ES',        '2025-06-25 05:21:53', '2025-06-25 05:21:53'),
 (89,    6,      'timezone',     'Europe/Ulyanovsk',     '2025-06-25 05:21:53',  '2025-06-25 05:21:53'),
 (90,    6,      'number_format',        '[\"2\",\".\",\"\\u00a0,\"]',   '2025-06-25 05:21:53',  '2025-06-25 05:21:53'),
