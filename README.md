@@ -10,7 +10,7 @@ Manage shops, vehicles and commodities in administration panel. Calculate invoic
 
 ![FadoScreenshot](https://user-images.githubusercontent.com/45335404/71079337-5fd22600-218b-11ea-9500-a17b98e7d9c5.png)
 
-`Debian, Kali, Ubuntu or Alpine'
+`Debian, Kali, Ubuntu, Android or Alpine Linux`
 
 ## Start Docker container
 
@@ -65,4 +65,4 @@ Go to <http://127.0.0.1/?page=sq> and upload `fado-DML.sql`.
 English, German, Spanish, Dutch, Turkish, Farsi, Jewish, Russian, French, Arabic
 
 ## License
-[GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.en.html) © 2017-2025 Fatih Kaymak
+[GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.en.html) © 2017-2026 Fatih Kaymak
