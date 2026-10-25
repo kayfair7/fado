@@ -4,23 +4,23 @@ namespace Fado\Controller;
 
 use \Fado\Model\Cache as Cache;
 
-/*        
- *  PAGENAME        =>    SHORT
- *  ajax             => aj
+/*
+ *  PAGENAME        => SHORTNAME
+ *  ajax            => aj
  *  information     => if
  *  settings        => st
- *  shop           => sh
+ *  shop            => sh
  *  vehicles        => ve
- *  warehouse        => wa
+ *  warehouse       => wa
  *  invoices        => in
- *  newinvoice     => ne
- *  navigator        => na
+ *  newinvoice      => ne
+ *  navigator       => na
  *  meetings        => me
- *  user           => us
- *  usersettings     => ut
+ *  user            => us
+ *  usersettings    => ut
  *  sqladmin        => sq
- *  adminsettings => at
- *  userrights    => ur
+ *  adminsettings   => at
+ *  userrights      => ur
  *
  */
 
