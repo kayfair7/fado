@@ -49,6 +49,7 @@ trait HttpRequest {
     }
 
     public static function trim($value) {
+        return mb_trim($value);
         return preg_replace(array('/^(\s+)[.]+$/u', '/^[.]+(\s+)$/u', '/^(\s+)$/u'), array('', '', '$1'), $value);
     }
 
