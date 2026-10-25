@@ -21,7 +21,7 @@ echo "Download & install packages"
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
 apt update && apt -f upgrade -y
-apt -f install -y apache2 php8.4 php8.4-fpm php8.4-intl php8.4-mysql php8.4-mbstring php8.4-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached htop nano locales curl
+apt -f install -y apache2 php8.4 php8.4-fpm php8.4-intl php8.4-mysql php8.4-mbstring php8.4-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached locales nano
 
 echo "Compile locales"
 
@@ -58,7 +58,6 @@ localedef -f UTF-8 -i ru_RU ru_RU.utf8
 update-locale
 locale -a
 
-cd /var/www/html
 chown -R www-data $PWD
 chmod -R 770 $PWD
 chgrp -R www-data $PWD
@@ -122,7 +121,7 @@ ServerName fado.org
             <IfModule mod_rewrite.c>
                 RewriteEngine on
                 RewriteCond "%{HTTPS}" !=on
-                RewriteRule "^/?(.*)" "https://%{SERVER_NAME}/\$1" [L,R=301]
+                RewriteRule "^/(.*)" "https://%{SERVER_NAME}/\$1" [L,R=301]
             </IfModule>
         </IfModule>
 
@@ -197,3 +196,4 @@ service --status-all
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
+tail -f /var/log/apache2/other_vhosts_access.log
