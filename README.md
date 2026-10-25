@@ -29,7 +29,7 @@ Compatible with Android and Termux App.
     proot-distro run -b "/data/data/com.termux/files/home/fado:/var/www/html" debian -- /bin/bash /var/www/html/docker/deploy-forky.sh
 
 ## User
-Open <http://127.0.0.1> or <http://127.0.0.1:2080> and login as superuser `fado` with password `rood`.
+Open <http://127.0.0.1:2080> and login as superuser `fado` with password `rood`.
 Change the password of the database user:
 
     mariadb -u root -e "SET PASSWORD FOR 'fado'@'localhost' = PASSWORD('secret1');"
