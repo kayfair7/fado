@@ -27,7 +27,7 @@ Compatible with Android and Termux App.
     udocker install
     git clone https://github.com/kayfair7/fado.git
     cp fado/docker/udocker.conf ~/.udocker/
-    udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/fado/:/var/www/html/" debian:latest /bin/bash /var/www/html/docker/deploy-forky.sh
+    udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/fado/:/var/www/html/" --entrypoint="/bin/bash /var/www/html/docker/deploy-forky.sh" debian:latest /bin/bash
 
 ## User
 Open <http://127.0.0.1> or <http://127.0.0.1:2080> and login as superuser `fado` with password `rood`.
