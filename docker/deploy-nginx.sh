@@ -3,7 +3,7 @@
 # debian
 #
 
-cwd=$(dirname "$PWD")
+cd /var/www/html
 
 if [ -f /var/www/isdeployed ]; then
     dpkg-statoverride --remove "/etc/ssl/private"
@@ -17,8 +17,7 @@ if [ -f /var/www/isdeployed ]; then
     service php8.4-fpm restart
     service memcached restart
     service --status-all
-    tail -f /var/log/nginx/error.log
-    exit 0
+    tail -f /var/log/nginx/access.log
 fi
 
 adduser --disabled-password --no-create-home --verbose --quiet memcache
@@ -26,8 +25,8 @@ adduser --disabled-password --no-create-home --verbose --quiet memcache
 echo "Download & install packages"
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
-apt update && apt -f upgrade -y
-apt install -y nginx-full libnginx-mod-http-memc libnginx-mod-http-set-misc libnginx-mod-http-headers-more-filter php php-pdo-mysql php-intl php-mbstring php-mysql php-memcache php-fpm mariadb-server memcached nginx-snippets lua-nginx-memcached php-xml locales
+apt-get update && apt-get upgrade -y
+apt-get install -y nginx-full libnginx-mod-http-memc libnginx-mod-http-set-misc libnginx-mod-http-headers-more-filter php php-pdo-mysql php-intl php-mbstring php-mysql php-memcache php-fpm mariadb-server memcached nginx-snippets lua-nginx-memcached php-xml locales
 
 echo "Compile locales"
 
@@ -64,9 +63,9 @@ localedef -f UTF-8 -i ru_RU ru_RU.utf8
 update-locale
 locale -a
 
-#chown -Rvf wordpress_user $cwd/*
-#chmod -Rvf 770 $cwd/*
-#chgrp -Rvf wordpress_user $cwd/*
+chown -Rvf wordpress_user $PWD/*
+chmod -Rvf 770 $PWD/*
+chgrp -Rvf wordpress_user $PWD/*
 
 echo "Start & prepare MariaDB"
 
@@ -76,11 +75,11 @@ mariadb -u root -e "CREATE USER IF NOT EXISTS fado@localhost IDENTIFIED BY 'rood
 mariadb -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'fado'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
 mariadb -u root -e "DROP DATABASE IF EXISTS fado; CREATE DATABASE fado DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
 mariadb -u root -e "GRANT ALL PRIVILEGES ON fado.* TO 'fado'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-mariadb -u fado -prood fado < "$cwd/fado-DML.sql"
+mariadb -u fado -prood fado < "$PWD/fado-DML.sql"
 
-rm "$cwd/database.csv"
+rm "$PWD/database.csv"
 
-cat <<EOF >> "$cwd/database.csv"
+cat <<EOF >> "$PWD/database.csv"
 user;fado
 pwd;rood
 db;fado
@@ -146,6 +145,4 @@ service --status-all
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
-tail -f /var/log/nginx/error.log
-
-exit 0
+tail -f /var/log/nginx/access.log

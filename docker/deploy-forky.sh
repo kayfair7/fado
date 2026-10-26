@@ -20,8 +20,8 @@ fi
 echo "Download & install packages"
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
-apt update && apt -f upgrade -y
-apt -f install -y apache2 php8.4 php8.4-fpm php8.4-intl php8.4-mysql php8.4-mbstring php8.4-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached locales nano
+apt-get update && apt-get upgrade -y
+apt-get install -y apache2 php8.4 php8.4-fpm php8.4-intl php8.4-mysql php8.4-mbstring php8.4-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached locales nano
 
 echo "Compile locales"
 

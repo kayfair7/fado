@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cwd=$(dirname "$0")
+cd /var/www/html
 
 if [ -f /var/www/isdeployed ]; then
     dpkg-statoverride --remove "/etc/ssl/private"
@@ -14,17 +14,15 @@ if [ -f /var/www/isdeployed ]; then
     service php8.3-fpm restart
     service memcached restart
     service --status-all
-
     tail -f /var/log/apache2/other_vhosts_access.log
-    exit 0
 fi
 
 echo "Download & install packages"
 
 echo "nameserver 8.8.4.4" > /etc/resolv.conf
 
-apt update && apt upgrade -y
-apt install -y apache2 php8.3 php8.3-fpm php8.3-intl php8.3-mysql php8.3-mbstring php8.3-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached htop nano locales curl
+apt-get update && apt-get upgrade -y
+apt-get install -y apache2 php8.3 php8.3-fpm php8.3-intl php8.3-mysql php8.3-mbstring php8.3-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached htop nano locales curl
 
 echo "Compile locales"
 
@@ -61,9 +59,9 @@ localedef -f UTF-8 -i ru_RU ru_RU.utf8
 update-locale
 locale -a
 
-chown -R www-data $cwd/*
-chmod -R 770 $cwd/*
-chgrp -R www-data $cwd/*
+chown -R www-data $PWD/*
+chmod -R 770 $PWD/*
+chgrp -R www-data $PWD/*
 
 echo "Start & prepare MariaDB"
 
@@ -95,8 +93,10 @@ echo "Configure and start Apache2 and PHP FPM"
 
 rm /etc/apache2/sites-available/*
 rm /etc/apache2/sites-enabled/*
-
+rm -r /var/apache2
+mkdir /var/apache2
 sed -i -e 's/Listen 80/Listen 2080/g' /etc/apache2/ports.conf
+echo "Mutex file:/var/apache2" >> /etc/apache2/apache2.conf
 
 cat <<EOF >> /etc/apache2/sites-available/fado.conf
 ServerName fado.org
@@ -203,4 +203,4 @@ service --status-all
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
 tail -f /var/log/apache2/other_vhosts_access.log
-exit 0
+
