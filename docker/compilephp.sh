@@ -28,7 +28,7 @@ if [ "$pak" = "true" ]; then
    dpkg-statoverride --remove "/usr/bin/crontab"
    echo "nameserver 8.8.4.4" > /etc/resolv.conf
    apt-get update && apt-get upgrade -y
-   apt-get install -y git patch make autoconf libtool binutils bison re2c wget tar gcc cpp clang cpp-for-build linux-libc-dev-arm64-cross llvm  mold lld binutils-dev pkgconf python3-icu libpsl-dev libselinux-dev libsystemd-dev libacl1-dev python3-pylibacl libevent-dev libnpth0-dev python3-libxml2 locales cmake libapr1-dev libaprutil1-dev libpcre2-dev libpcre2-32-0 pcre2-utils python3-pcre2 libpcre2-posix3 devscripts dh-exec dh-package-notes cracklib-runtime default-jdk flex gdb libaio-dev libboost-atomic-dev libboost-chrono-dev libboost-date-time-dev libboost-dev libboost-filesystem-dev libboost-regex-dev libboost-thread-dev libbz2-dev libcrack2-dev libedit-dev libedit-dev libfmt-dev libjemalloc-dev libjudy-dev libkrb5-dev liblz4-dev liblzo2-dev libnuma-dev libpam0g-dev libsnappy-dev libssl-dev liburing-dev libzstd-dev unixodbc-dev bison liblzma-dev libsystemd-dev libsctp-dev python3 gawk lsb-release gnupg libpng-dev libzmq5-dev libgcrypt20-dev libhiredis-dev libmaxminddb-dev libjson-c-dev mariadb-server libncurses-dev ccache libpcap-dev libidn2-dev libgtest-dev librrd-dev libcrypto++-dev libpthreadpool-dev libjson-c-dev libpthread-stubs0-dev libxml2-dev libsqlite3-dev libssl-dev libpcap-dev libcurl-dev
+   apt-get install -y git patch make autoconf libtool binutils bison re2c wget tar gcc cpp clang cpp-for-build linux-libc-dev-arm64-cross llvm  mold lld binutils-dev pkgconf python3-icu libpsl-dev libselinux-dev libsystemd-dev libacl1-dev python3-pylibacl libevent-dev libnpth0-dev python3-libxml2 locales cmake libapr1-dev libaprutil1-dev libpcre2-dev libpcre2-32-0 pcre2-utils python3-pcre2 libpcre2-posix3 devscripts dh-exec dh-package-notes cracklib-runtime default-jdk flex gdb libaio-dev libboost-atomic-dev libboost-chrono-dev libboost-date-time-dev libboost-dev libboost-filesystem-dev libboost-regex-dev libboost-thread-dev libbz2-dev libcrack2-dev libedit-dev libedit-dev libfmt-dev libjemalloc-dev libjudy-dev libkrb5-dev liblz4-dev liblzo2-dev libnuma-dev libpam0g-dev libsnappy-dev libssl-dev liburing-dev libzstd-dev unixodbc-dev bison liblzma-dev libsystemd-dev libsctp-dev python3 gawk lsb-release gnupg libpng-dev libzmq5-dev libgcrypt20-dev libhiredis-dev libmaxminddb-dev libjson-c-dev mariadb-server libncurses-dev ccache libpcap-dev libidn2-dev libgtest-dev librrd-dev libcrypto++-dev libpthreadpool-dev libjson-c-dev libpthread-stubs0-dev libxml2-dev libsqlite3-dev libssl-dev libpcap-dev libcurl4-openssl-dev
    locale-gen es_ES
    localedef -f UTF-8 -i es_ES es_ES.utf8
 fi
@@ -232,11 +232,19 @@ fi
 
      cd "$libsdir/server/"
 
+     mkdir -p /usr/bin/mariadb/bin
+
      git submodule update --init --recursive
 
-     cmake $PWD -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_EMBEDDED_SERVER=ON -DCMAKE_INSTALL_PREFIX=/usr/bin/mariadb -DPLUGIN_ROCKSDB=NO
+     cmake $PWD -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                -DWITH_EMBEDDED_SERVER=ON \
+                -DCMAKE_INSTALL_PREFIX=/usr/bin/mariadb \
+                -DPLUGIN_ROCKSDB=NO \
+                -DCURL_INCLUDE_DIR="$libsdir/curl-8.20.0/include" \
+                -DCURL_LIBRARY="$libsdir/curl-8.20.0/lib" \
+                -DLDFLAGS="-lcurl"
 
-     cmake --build $PWD --parallel $(nproc)
+     cmake --build $PWD --parallel $(nproc - 1)
 
      cmake --install $PWD
 
@@ -321,7 +329,7 @@ fi
     export GLIBC_CFLAGS="-I/usr/include/glibc/include"
     export ALL_CFLAGS="$LIBXML_CFLAGS $OPENSSL_CFLAGS $GNU_CFLAGS $ICU_CFLAGS $ONIG_CFLAGS $ZLIB_CFLAGS $INTL_CFLAGS $CURL_CFLAGS $SQLITE_CFLAGS $NTP_CFLAGS $GLIBC_CFLAGS"
     export LDFLAGS="$GLIBC_LIBS $GNU_PTH $LIBXML_LIBS $OPENSSL_LIBS $ICU_LIBS $ONIG_LIBS $ZLIB_LIBS $INTL_LIBS $CURL_LIBS $SQLITE_LIBS $NTP_LIBS"
-    export LIBS="-lgcc -lz -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap -licutu -licuuc -licuio -licui18n -licudt78 -lonig"
+    export LIBS="-lgcc -lz -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap -licutu -licuuc -licuio -licui18n -licudt78 -lonig -lcurl"
     export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/include:/usr/local/lib:/usr/local/include:/usr/bin:/bin:/usr/local/bin:$PKG_CONFIG_PATH"
     export CFLAGS="-O2 -nostartfiles -std=c17 -std=gnu17 -pthread $ALL_CFLAGS"
     export ICU_CFLAGS="$CFLAGS"
