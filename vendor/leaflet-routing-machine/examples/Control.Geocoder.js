@@ -309,7 +309,7 @@
 
 	L.Control.Geocoder.Nominatim = L.Class.extend({
 		options: {
-			serviceUrl: 'https://nominatim.openstreetmap.org/',
+			serviceUrl: '//nominatim.openstreetmap.org/',
 			geocodingQueryParams: {},
 			reverseQueryParams: {},
 			htmlTemplate: function(r) {

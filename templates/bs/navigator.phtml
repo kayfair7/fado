@@ -1,8 +1,7 @@
-<!DOCTYPE html>
-<html lang="<?php echo $view->getActiveLanguage(); ?>">
-<head>
+<!DOCTYPE html> <html lang="<?php echo $view->getActiveLanguage(); ?>"> <head>
 
     <title><?php echo $view->translate('PROGRAM_TITLE'); ?></title>
+
 
     <?php
 
@@ -27,7 +26,7 @@
 <body>
     <div id="wrapper">
         <?php
-$printMode = false;
+        $printMode = false;
         $view->includeTemplate('navbar', array());
 
         ?>
@@ -84,10 +83,6 @@ $printMode = false;
             zoom: 13
         });
 
-        window.lrmConfig = {
-            serviceUrl: '<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_route_url'); ?>'
-        };
-
         L.tileLayer('<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_tile_url'); ?>', {
             attribution: '',
         }).addTo(map);
@@ -98,8 +93,14 @@ $printMode = false;
             iconAnchor: [28, 50]
         });
 
-        var control = L.Routing.control(L.extend(window.lrmConfig, {
+        var control = L.Routing.control({
             waypoints: [],
+            router: L.Routing.osrmv1({
+                serviceUrl: '<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_route_url'); ?>'
+            }),
+//            router: L.Routing.mapbox(
+//                'pk'
+//            ),
             geocoder: L.Control.Geocoder.nominatim(),
             routeWhileDragging: true,
             reverseWaypoints: true,
@@ -112,7 +113,7 @@ $printMode = false;
                     {color: 'blue', opacity: 0.5, weight: 2}
                 ]
             }
-        })).addTo(map);
+        }).addTo(map);
 
         L.Routing.errorControl(control).addTo(map);
 
@@ -138,7 +139,7 @@ $printMode = false;
         selectRoute();
 
         $('.route-select option').each(function() {
-            $(this).on('mousedown touchdown', function(event) {
+            $(this).on('mousedown', function(event) {
                 selectRoute();
             });
         });
