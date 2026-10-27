@@ -21,7 +21,7 @@ wcll () {
            i=$(( $i + $zz ))
            cd "$1"
         elif [ "$y" != "" ]; then
-            x=$( wc -l "$1/$s" | grep -o -E "[0-9]+[[:space:]]" | grep -o -E "[0-9]+" )
+            x=$( wc -l "$1/$s" | grep -o -E "[0-9]+[[:space:]]" | grep -o -E "[0-9]+" | xargs expr )
             if [ "$x" != "" ]; then
                 i=$(( $i + $x ))
             fi
