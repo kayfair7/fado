@@ -15639,8 +15639,7 @@ module.exports={
 		options: {
 			timeout: 500,
 			blurTimeout: 100,
-			noResultsMessage: 'No results found.',
-			attachResultsToContainer: false,
+			noResultsMessage: 'No results found.'
 		},
 
 		initialize: function(elem, callback, context, options) {
@@ -15650,7 +15649,7 @@ module.exports={
 			this._resultFn = options.resultFn ? L.Util.bind(options.resultFn, options.resultContext) : null;
 			this._autocomplete = options.autocompleteFn ? L.Util.bind(options.autocompleteFn, options.autocompleteContext) : null;
 			this._selectFn = L.Util.bind(callback, context);
-			this._container = L.DomUtil.create('div', 'leaflet-routing-geocoder-result', options.attachResultsToContainer ? this._elem.parentElement : undefined);
+			this._container = L.DomUtil.create('div', 'leaflet-routing-geocoder-result');
 			this._resultTable = L.DomUtil.create('table', '', this._container);
 
 			// TODO: looks a bit like a kludge to register same for input and keypress -
@@ -15668,9 +15667,6 @@ module.exports={
 
 		close: function() {
 			L.DomUtil.removeClass(this._container, 'leaflet-routing-geocoder-result-open');
-			if (this.options.attachResultsToContainer) {
-				this._container.style.position = 'absolute';
-			}
 			this._isOpen = false;
 		},
 
@@ -15687,8 +15683,6 @@ module.exports={
 				this._container.style.top = (rect.bottom + scrollY) + 'px';
 				this._container.style.width = (rect.right - rect.left) + 'px';
 				document.body.appendChild(this._container);
-			} else if (this.options.attachResultsToContainer) {
-				this._container.style.position = 'relative';
 			}
 
 			L.DomUtil.addClass(this._container, 'leaflet-routing-geocoder-result-open');
@@ -15712,13 +15706,7 @@ module.exports={
 				tr = L.DomUtil.create('tr', '', this._resultTable);
 				tr.setAttribute('data-result-index', i);
 				td = L.DomUtil.create('td', '', tr);
-
-				if (this.options.formatGeocoderResult) {
-					text = this.options.formatGeocoderResult(results[i]);
-				} else {
-					text = document.createTextNode(results[i].name);
-				}
-
+				text = document.createTextNode(results[i].name);
 				td.appendChild(text);
 				// mousedown + click because:
 				// http://stackoverflow.com/questions/10652852/jquery-fire-click-before-blur-event
@@ -16079,9 +16067,7 @@ module.exports={
 
 		_hookEvents: function(l) {
 			l.on('linetouched', function(e) {
-				if (e.afterIndex < this.getWaypoints().length - 1) {
-					this._plan.dragNewWaypoint(e);
-				}
+				this._plan.dragNewWaypoint(e);
 			}, this);
 		},
 
@@ -16522,10 +16508,6 @@ module.exports={
 				}, this);
 			}
 
-			if (typeof this.options.formatGeocoderResult == 'function') {
-				this.options.autocompleteOptions.formatGeocoderResult = this.options.formatGeocoderResult;
-			}
-
 			new Autocomplete(geocoderInput, function(r) {
 					geocoderInput.value = r.name;
 					wp.name = r.name;
@@ -16655,6 +16637,7 @@ module.exports = L.Routing = {
     Formatter: Formatter,
     GeocoderElement: GeocoderElement,
     Localization: Localization,
+    Formatter: Formatter,
     ItineraryBuilder: ItineraryBuilder,
 
     // Legacy; remove these in next major release
@@ -17868,74 +17851,6 @@ module.exports = L.Routing = {
 				minutes: 'min',
 				seconds: 's'
 			}
-		},
-		'uk': {
-			directions: {
-				N: 'північ',
-				NE: 'північний схід',
-				E: 'схід',
-				SE: 'південний схід',
-				S: 'південь',
-				SW: 'південний захід',
-				W: 'захід',
-				NW: 'північний захід',
-				SlightRight: 'плавно направо',
-				Right: 'направо',
-				SharpRight: 'різко направо',
-				SlightLeft: 'плавно наліво',
-				Left: 'наліво',
-				SharpLeft: 'різко наліво',
-				Uturn: 'розвернутися',
-			},
-			instructions: {
-				'Head':
-					[ 'Почати рух на {dir}', 'по {road}'],
-				'Continue':
-					[ 'Продовжувати рух на {dir}', 'по {road}'],
-				'SlightRight':
-					[ 'Плавний поворот направо', 'на {road}'],
-				'Right':
-					[ 'Направо', 'на {road}'],
-				'SharpRight':
-					[ 'Різкий поворот направо', 'на {road}'],
-				'TurnAround':
-					[ 'Розгорнутися'],
-				'SharpLeft':
-					[ 'Різкий поворот наліво', 'на {road}'],
-				'Left':
-					[ 'Поворот наліво', 'на {road}'],
-				'SlightLeft':
-					[ 'Плавний поворот наліво', 'на {road}'],
-				'WaypointReached':
-					[ 'Точка досягнута'],
-				'Roundabout':
-					[ "{ExitStr} з'їзд з кільця", 'на {road}'],
-				'DestinationReached':
-					[ 'Закінчення маршруту'],
-				'Fork': [ 'На розвилці поверніть {modifier}', 'на {road}'],
-				'Merge': [ 'Візьміть {modifier}', 'на {road}'],
-				'OnRamp': [ "Поверніть {modifier} на з'їзд", 'на {road}'],
-				'OffRamp': [ "З'їжджайте на {modifier}", 'на {road}'],
-				'EndOfRoad': [ 'Поверніть {modifier} в кінці дороги', 'на {road}'],
-				'Onto': 'на {road}'
-			},
-			formatOrder: function(n) {
-				return n + '-й';
-			},
-			ui: {
-				startPlaceholder: 'Початок',
-				viaPlaceholder: 'Через {viaNumber}',
-				endPlaceholder: 'Кінець'
-			},
-			units: {
-				meters: 'м',
-				kilometers: 'км',
-				yards: 'ярд',
-				miles: 'ми',
-				hours: 'г',
-				minutes: 'хв',
-				seconds: 'сек'
-			}
 		}
 	});
 })();
@@ -18079,16 +17994,8 @@ module.exports = L.Routing = {
 							error.message = 'Error parsing OSRM response: ' + ex.toString();
 						}
 					} else {
-						var message = err.type + (err.target && err.target.status ? ' HTTP ' + err.target.status + ': ' + err.target.statusText : '');
-						if (err.responseText) {
-							try {
-								data = JSON.parse(err.responseText);
-								if (data.message)
-									message = data.message;
-							} catch (ex) {
-							}
-						}
-						error.message = 'HTTP request failed: ' + message;
+						error.message = 'HTTP request failed: ' + err.type +
+							(err.target && err.target.status ? ' HTTP ' + err.target.status + ': ' + err.target.statusText : '');
 						error.url = url;
 						error.status = -1;
 						error.target = err;

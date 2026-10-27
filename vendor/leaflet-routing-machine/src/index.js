@@ -64,6 +64,7 @@ module.exports = L.Routing = {
     Formatter: Formatter,
     GeocoderElement: GeocoderElement,
     Localization: Localization,
+    Formatter: Formatter,
     ItineraryBuilder: ItineraryBuilder,
 
     // Legacy; remove these in next major release

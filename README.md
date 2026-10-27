@@ -56,9 +56,6 @@ Move file to `/etc/fado/database.csv`. Edit `core/Loader.php`:
 
     define('DB_CONFIG_FILE', '/etc/fado/database.csv');
 
-## Demo data
-Go to <http://127.0.0.1/?page=sq> and upload `fado-DML.sql`.
-
 ## Languages
 English, German, Spanish, Dutch, Turkish, Farsi, Jewish, Russian, French, Arabic
 

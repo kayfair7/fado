@@ -7,8 +7,7 @@
 		options: {
 			timeout: 500,
 			blurTimeout: 100,
-			noResultsMessage: 'No results found.',
-			attachResultsToContainer: false,
+			noResultsMessage: 'No results found.'
 		},
 
 		initialize: function(elem, callback, context, options) {
@@ -18,7 +17,7 @@
 			this._resultFn = options.resultFn ? L.Util.bind(options.resultFn, options.resultContext) : null;
 			this._autocomplete = options.autocompleteFn ? L.Util.bind(options.autocompleteFn, options.autocompleteContext) : null;
 			this._selectFn = L.Util.bind(callback, context);
-			this._container = L.DomUtil.create('div', 'leaflet-routing-geocoder-result', options.attachResultsToContainer ? this._elem.parentElement : undefined);
+			this._container = L.DomUtil.create('div', 'leaflet-routing-geocoder-result');
 			this._resultTable = L.DomUtil.create('table', '', this._container);
 
 			// TODO: looks a bit like a kludge to register same for input and keypress -
@@ -36,9 +35,6 @@
 
 		close: function() {
 			L.DomUtil.removeClass(this._container, 'leaflet-routing-geocoder-result-open');
-			if (this.options.attachResultsToContainer) {
-				this._container.style.position = 'absolute';
-			}
 			this._isOpen = false;
 		},
 
@@ -55,8 +51,6 @@
 				this._container.style.top = (rect.bottom + scrollY) + 'px';
 				this._container.style.width = (rect.right - rect.left) + 'px';
 				document.body.appendChild(this._container);
-			} else if (this.options.attachResultsToContainer) {
-				this._container.style.position = 'relative';
 			}
 
 			L.DomUtil.addClass(this._container, 'leaflet-routing-geocoder-result-open');
@@ -80,13 +74,7 @@
 				tr = L.DomUtil.create('tr', '', this._resultTable);
 				tr.setAttribute('data-result-index', i);
 				td = L.DomUtil.create('td', '', tr);
-
-				if (this.options.formatGeocoderResult) {
-					text = this.options.formatGeocoderResult(results[i]);
-				} else {
-					text = document.createTextNode(results[i].name);
-				}
-
+				text = document.createTextNode(results[i].name);
 				td.appendChild(text);
 				// mousedown + click because:
 				// http://stackoverflow.com/questions/10652852/jquery-fire-click-before-blur-event
