@@ -11,7 +11,7 @@ if [ -f /var/www/isdeployed ]; then
     dpkg-reconfigure --force memcached
     service apache2 restart
     service mariadb restart
-    service php8.3-fpm restart
+    service php8.5-fpm restart
     service memcached restart
     service --status-all
     tail -f /var/log/apache2/other_vhosts_access.log
@@ -22,7 +22,7 @@ echo "Download & install packages"
 echo "nameserver 8.8.4.4" > /etc/resolv.conf
 
 apt-get update && apt-get upgrade -y
-apt-get install -y apache2 php8.3 php8.3-fpm php8.3-intl php8.3-mysql php8.3-mbstring php8.3-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached htop nano locales curl
+apt-get install -y apache2 php8.5 php8.5-fpm php8.5-intl php8.5-mysql php8.5-mbstring php8.5-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached htop nano locales curl
 
 echo "Compile locales"
 
@@ -62,6 +62,7 @@ locale -a
 chown -R www-data $PWD/*
 chmod -R 770 $PWD/*
 chgrp -R www-data $PWD/*
+chmod -R 777 /tmp
 
 echo "Start & prepare MariaDB"
 
@@ -115,7 +116,7 @@ ServerName fado.org
         <IfModule mod_proxy_fcgi.c>
             <FilesMatch "\.(php|phtml)\$">
                 SetHandler application/x-httpd-php
-                SetHandler "proxy:unix:/var/run/php/php8.3-fpm.pid|fcgi://localhost/"
+                SetHandler "proxy:unix:/var/run/php/php8.5-fpm.sock|fcgi://localhost:9000/"
             </FilesMatch>
         </IfModule>
 
@@ -154,9 +155,9 @@ ServerName fado.org
         </IfModule>
 
        <IfModule mod_proxy_fcgi.c>
-            <FilesMatch "\.(php|phtml)$">
+            <FilesMatch "\.(php|phtml)\$">
                 SetHandler application/x-httpd-php
-                SetHandler "proxy:unix:/var/run/php/php8.3-fpm.pid|fcgi://localhost/"
+                SetHandler "proxy:unix:/var/run/php/php8.5-fpm.sock|fcgi://localhost:9000/"
             </FilesMatch>
        </IfModule>
 
@@ -189,11 +190,11 @@ ln -s /etc/apache2/sites-available/fado.conf /etc/apache2/sites-enabled/fado.con
 /usr/sbin/a2enmod headers
 #/usr/sbin/a2enmod ssl
 /usr/sbin/a2enmod proxy_fcgi setenvif
-/usr/sbin/a2enconf php8.3-fpm
+/usr/sbin/a2enconf php8.5-fpm
 
 service apache2 restart
 service mariadb restart
-service php8.3-fpm restart
+service php8.5-fpm restart
 
 echo "Start memcached RAM"
 service memcached restart
@@ -203,4 +204,3 @@ service --status-all
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
 tail -f /var/log/apache2/other_vhosts_access.log
-
