@@ -4,6 +4,8 @@
 # tar xvfz ~/proc.tar.gz
 # udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/fado/:/var/www/localhost/htdocs" --nosysdirs --volume="/data/data/com.termux/files/home/proc:/proc" --volume=/dev --volume=/sys alpine:latest /bin/busybox sh
 # busybox sh /var/www/localhost/htdocs/docker/deploy-alpine.sh
+#
+# proot-distro run -b "/data/data/com.termux/files/home/fado:/var/www/localhost/htdocs" alpine -- /bin/busybox sh /var/www/localhost/htdocs/docker/deploy-alpine.sh
 
 echo "nameserver 74.82.42.42" > /etc/resolv.conf
 echo "fado-srv" > /etc/hostname
@@ -26,7 +28,6 @@ if [ -f /var/www/isdeployed ]; then
     mount -t  devtmpfs devtmpfs /dev/shm
     mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
     /etc/init.d/networking -U restart
-    /etc/init.d/rngd -U restart
     /etc/init.d/fcgiwrap -U restart
     /etc/init.d/apache2 -U restart
     /etc/init.d/php-fpm85 -U restart
@@ -38,33 +39,17 @@ fi
 
 echo "Download & install packages"
 
-apk add nano wget git openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper ncurses openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc ncurses eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd abuild bc binutils bison build-base cmake make gcc ncurses-dev ca-certificates wget runit gcompat bash-completion android-tools-bash-completion linux-headers flexget flex flex-dev
+apk add nano openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd ncurses ca-certificates runit gcompat bash-completion android-tools-bash-completion linux-headers linux-stable
 
 chown -Rvf apache:apache /var/www/localhost/htdocs
 chmod -Rvf 770 /var/www/localhost/htdocs
 chmod -Rvf 770 /var
-chmod -Rvf 770 /srv
-
-#compile modules
-cd /srv
-wget -nc https://github.com/torvalds/linux/archive/refs/tags/v7.2.tar.gz
-tar xvf v7.2.tar.gz
-cd /srv/linux-7.2/
-sed -i -e 's/YYLTYPE yylloc;/\/* YYLTYPE yylloc; *\//g' scripts/dtc/dtc-lexer.lex.c
-make defconfig
-make oldconfig
-make modules_prepare -j $(nproc)
-make modules -j $(nproc)
-make modules_install
+chmod -Rvf 777 /tmp
 #sed -i -e 's/# skip_mount_dev="NO"/skip_mount_dev="YES"/g' /etc/conf.d/devfs
 echo "/dev            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fstab
 echo "/dev/shm            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fstab
 mount -t devtmpfs devtmpfs /dev
 mount -t devtmpfs devtmpfs /dev/shm
-unlink /lib/modules/15
-ln -s /lib/modules/4.20.17 /lib/modules/15
-depmod -a
-mkinitfs
 
 echo "Start & prepare MariaDB"
 
@@ -150,7 +135,7 @@ SharememPath /dev/shm
             RewriteEngine on
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule "/^(.+)/\$" "/index.php?page=\$1" [L,QSA]
+            RewriteRule "^/(.+)/\$" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
         <FilesMatch "\.(htaccess|csv|md|sql|sh|log|gz|yml|conf|gz)\$">
@@ -182,7 +167,7 @@ SharememPath /dev/shm
             RewriteEngine on
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule "/^(.+)/\$" "/index.php?page=\$1" [L,QSA]
+            RewriteRule "^/(.+)/\$" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
         SSLEngine on
@@ -207,7 +192,6 @@ rm /etc/apache2/conf.d/ssl.conf
 /etc/init.d/firstart -U restart
 /etc/init.d/modules -U restart
 /etc/init.d/networking -U restart
-/etc/init.d/rngd -U restart
 /etc/init.d/fcgiwrap -U restart
 /etc/init.d/apache2 -U restart
 /etc/init.d/php-fpm85 -U restart
@@ -216,3 +200,4 @@ rc-status -U
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
+tail -f /var/log/apache2/access.log
