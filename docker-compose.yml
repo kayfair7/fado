@@ -14,6 +14,6 @@ services:
 #      - 80:80
 #      - 443:443
     volumes:
-      - /home/fa/fado:/var/www/html
-#      - /home/fa/ssl:/var/www/ssl
+      - ./:/var/www/html
+#      - ../ssl:/var/www/ssl
 
