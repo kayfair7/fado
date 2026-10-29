@@ -18,7 +18,7 @@ Manage shops, vehicles and commodities in administration panel. Calculate invoic
     cd fado/
     docker compose up
 
-The Apache config file and SSL keys are linked in the volume section of the `docker-compose.yml`. Activate HTTPS with `/usr/sbin/a2enmod ssl`.
+The application directory and SSL keys are linked in the volume section of the `docker-compose.yml`. Activate HTTPS with `/usr/sbin/a2enmod ssl`.
 
 ## Start in Termux App
 Compatible with Android and Termux App.
