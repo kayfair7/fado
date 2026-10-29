@@ -1,6 +1,7 @@
 <!DOCTYPE html> <html lang="<?php echo $view->getActiveLanguage(); ?>"> <head>
 
-    <title><?php echo $view->translate('PROGRAM_TITLE'); ?></title>
+    <title><?php echo $view->translate('PROGRAM_TITLE'); 
+    ?></title>
 
 
     <?php
@@ -98,9 +99,7 @@
             router: L.Routing.osrmv1({
                 serviceUrl: '<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_route_url'); ?>'
             }),
-//            router: L.Routing.mapbox(
-//                'pk'
-//            ),
+//            router: L.Routing.mapbox(''),
             geocoder: L.Control.Geocoder.nominatim(),
             routeWhileDragging: true,
             reverseWaypoints: true,
@@ -121,7 +120,7 @@
            var waypoints = [];
            $('.route-select option').each(function (i) {
                if (this.selected) {
-                   waypoints.push(L.latLng(this.dataset.lat, this.dataset.lng));
+                   waypoints.push(L.LatLng(this.dataset.lat, this.dataset.lng));
                }
            });
            control.setWaypoints(waypoints);
@@ -138,10 +137,8 @@
 
         selectRoute();
 
-        $('.route-select option').each(function() {
-            $(this).on('mousedown', function(event) {
-                selectRoute();
-            });
+        $('.route-select').on('change', function() {
+            selectRoute();
         });
 
      </script>
