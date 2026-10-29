@@ -53,7 +53,10 @@ $activeTab = \Fado\Model\Cache::get('activeTab');
                                 <?php echo $view->decodeHtmlEntities(json_decode($activeShop['information'])); ?>
                                 <br><br>
                                 <?php echo $view->DDtoDMS($activeShop['lng'], 'lng') . ' ' . $view->DDtoDMS($activeShop['lat'], 'lat'); ?>
-                            </address>
+                                <br>
+                                <br>
+                                <span class="digital7"><?php echo $view->formatDate($activeShop['established']); ?><span>
+                           </address>
                     </div>
                     <div id="SHOP_TAB_MAP" class="tab-pane fade in active" role="tabpanel">
                         <h4><?php echo $view->translate('SHOP_PANEL_MAP'); ?></h4>
