@@ -13,8 +13,7 @@ class Users2Shop extends FadoController {
         $this->model = new \Fado\Model\User();
     }
 
-    public function get(?Iterator $list = 
-null) {
+    public function get(?Iterator $list = null) {
         $userId = $this->request->getParameter('user');
         $shopId = $this->request->getParameter('shop');
 
