@@ -67,7 +67,7 @@ if ($activeShop == null || empty($activeShop) && empty($formMessages)) {
             <label class="control-label" for="inputError"><?php echo $view->translate($formMessages['phone']); ?></label>
             <?php } ?>
             <div class="form-group input-group">
-                <span class="input-group-addon">&nbsp;🕻&nbsp;</span>
+                <span class="input-group-addon glyphicon glyphicon-phone"></span>
                 <input name="phone" class="form-control" placeholder="" value="<?php echo $activeShop['phone']; ?>">
             </div>
         </div>
