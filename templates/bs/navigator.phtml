@@ -95,11 +95,9 @@
 
         var control = L.Routing.control({
             waypoints: [],
-            router: L.Routing.osrmv1({
-                serviceUrl: '<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_route_url'); ?>'
-            }),
+            serviceUrl: '<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_route_url'); ?>',
 //            router: L.Routing.mapbox(
-//                'pk.eyJ1IjoiZmVyZGFrI'
+//                'pk.eyJ1IjoiZmV'
 //            ),
             geocoder: L.Control.Geocoder.nominatim(),
             routeWhileDragging: true,
