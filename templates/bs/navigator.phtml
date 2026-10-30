@@ -1,7 +1,6 @@
 <!DOCTYPE html> <html lang="<?php echo $view->getActiveLanguage(); ?>"> <head>
 
-    <title><?php echo $view->translate('PROGRAM_TITLE'); 
-    ?></title>
+    <title><?php echo $view->translate('PROGRAM_TITLE'); ?></title>
 
 
     <?php
@@ -99,7 +98,9 @@
             router: L.Routing.osrmv1({
                 serviceUrl: '<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_route_url'); ?>'
             }),
-//            router: L.Routing.mapbox(''),
+//            router: L.Routing.mapbox(
+//                'pk.eyJ1IjoiZmVyZGFrI'
+//            ),
             geocoder: L.Control.Geocoder.nominatim(),
             routeWhileDragging: true,
             reverseWaypoints: true,
