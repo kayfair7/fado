@@ -4,7 +4,7 @@
             <div class="form-group">
                 <label><?php echo $view->translate('VEHICLE_2_SHOP_LABEL'); ?></label>
                 <input type="hidden" name="vehicle2shop_id" value="<?php echo $activeVehicle['sid']; ?>"/>
-                <select name="shop2vehicle_shop" multiple="multiple" class="form-control shop2vehicle-id">
+                <select name="shop2vehicle_shop" class="form-control shop2vehicle-id">
             <?php
                 foreach($allShops->get() as $shop) {
             ?>
