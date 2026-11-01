@@ -93,17 +93,21 @@
             iconAnchor: [28, 50]
         });
 
-        var control = L.Routing.control({
+        window.lrmConfig = {
+            serviceUrl: '<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_route_url'); ?>'
+//    serviceUrl: 'https://api.mapbox.com/directions/v5',
+//    profile: 'mapbox/driving',
+        };
+
+        var control = L.Routing.control(L.extend(window.lrmConfig, {
             waypoints: [],
-            serviceUrl: '<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_route_url'); ?>',
-//            router: L.Routing.mapbox(
-//                'pk.eyJ1IjoiZmV'
-//            ),
+ //           router: L.Routing.mapbox(
+ //             'pk.eyJ1IjoiZmVyZG'
+ //       ),
             geocoder: L.Control.Geocoder.nominatim(),
             routeWhileDragging: true,
             reverseWaypoints: true,
             showAlternatives: true,
-            useHints: false,
             altLineOptions: {
                 styles: [
                     {color: 'black', opacity: 0.15, weight: 9},
@@ -111,7 +115,7 @@
                     {color: 'blue', opacity: 0.5, weight: 2}
                 ]
             }
-        }).addTo(map);
+        })).addTo(map);
 
         L.Routing.errorControl(control).addTo(map);
 
@@ -123,6 +127,7 @@
                }
            });
            control.setWaypoints(waypoints);
+           control.route();
            var linkSuffix = '?';
            for (var i = 0; i < waypoints.length; i++) {
                linkSuffix += waypoints[i].lat.toString() + ',' + waypoints[i].lng.toString();
