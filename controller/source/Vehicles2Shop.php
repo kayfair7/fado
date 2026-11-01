@@ -24,7 +24,7 @@ class Vehicles2Shop extends FadoController {
         if ($vehicle2ShopId != false && $saveVehicle2shop == 'save_vehicle2shop') {
             if ($vehicle2ShopVehicles == false) {
                 $this->model->deleteAllVehicleToShopRelation($vehicle2ShopId);
-            } else if (!$this->model->saveVehicleToShopRelation(array($vehicle2ShopId), $vehicle2ShopVehicles)) {
+            } else if ($this->model->saveVehicleToShopRelation(array($vehicle2ShopId), $vehicle2ShopVehicles)) {
                 Cache::set('message', 'VEHICLE_TO_SHOP_ADDED');
             } else {
                 Cache::set('message', 'VEHICLE_TO_SHOP_ADD_ERROR');
