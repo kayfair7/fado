@@ -28,7 +28,7 @@ if [ "$pak" = "true" ]; then
    dpkg-statoverride --remove "/usr/bin/crontab"
    echo "nameserver 8.8.4.4" > /etc/resolv.conf
    apt-get update && apt-get upgrade -y
-   apt-get install -y git patch make autoconf libtool binutils bison re2c wget tar gcc cpp clang cpp-for-build linux-libc-dev-arm64-cross llvm  mold lld binutils-dev pkgconf python3-icu libpsl-dev libselinux-dev libsystemd-dev libacl1-dev python3-pylibacl libevent-dev libnpth0-dev python3-libxml2 locales cmake libapr1-dev libaprutil1-dev libpcre2-dev libpcre2-32-0 pcre2-utils python3-pcre2 libpcre2-posix3 devscripts dh-exec dh-package-notes cracklib-runtime default-jdk flex gdb libaio-dev libboost-atomic-dev libboost-chrono-dev libboost-date-time-dev libboost-dev libboost-filesystem-dev libboost-regex-dev libboost-thread-dev libbz2-dev libcrack2-dev libedit-dev libedit-dev libfmt-dev libjemalloc-dev libjudy-dev libkrb5-dev liblz4-dev liblzo2-dev libnuma-dev libpam0g-dev libsnappy-dev libssl-dev liburing-dev libzstd-dev unixodbc-dev bison liblzma-dev libsystemd-dev libsctp-dev python3 gawk lsb-release gnupg libpng-dev libzmq5-dev libgcrypt20-dev libhiredis-dev libmaxminddb-dev libjson-c-dev mariadb-server libncurses-dev ccache libpcap-dev libidn2-dev libgtest-dev librrd-dev libcrypto++-dev libpthreadpool-dev libjson-c-dev libpthread-stubs0-dev libxml2-dev libsqlite3-dev libssl-dev libpcap-dev libcurl4-openssl-dev
+   apt-get install -y git patch make autoconf libtool binutils bison re2c wget tar gcc cpp clang cpp-for-build linux-libc-dev-arm64-cross llvm  mold lld binutils-dev pkgconf python3-icu libpsl-dev libselinux-dev libsystemd-dev libacl1-dev python3-pylibacl libevent-dev libnpth0-dev python3-libxml2 locales cmake libapr1-dev libaprutil1-dev libpcre2-dev libpcre2-32-0 pcre2-utils python3-pcre2 libpcre2-posix3 devscripts dh-exec dh-package-notes cracklib-runtime default-jdk flex gdb libaio-dev libboost-atomic-dev libboost-chrono-dev libboost-date-time-dev libboost-dev libboost-filesystem-dev libboost-regex-dev libboost-thread-dev libbz2-dev libcrack2-dev libedit-dev libedit-dev libfmt-dev libjemalloc-dev libjudy-dev libkrb5-dev liblz4-dev liblzo2-dev libnuma-dev libpam0g-dev libsnappy-dev libssl-dev liburing-dev libzstd-dev unixodbc-dev bison liblzma-dev libsystemd-dev libsctp-dev python3 gawk lsb-release gnupg libpng-dev libzmq5-dev libgcrypt20-dev libhiredis-dev libmaxminddb-dev libjson-c-dev libncurses-dev ccache libpcap-dev libidn2-dev libgtest-dev librrd-dev libcrypto++-dev libpthreadpool-dev libjson-c-dev libpthread-stubs0-dev libxml2-dev libsqlite3-dev libssl-dev libpcap-dev libcurl4-openssl-dev
    locale-gen es_ES
    localedef -f UTF-8 -i es_ES es_ES.utf8
 fi
@@ -41,7 +41,7 @@ if [ "$down" = "true" ]; then
    rm -r "$libsdir"
    mkdir -p "$libsdir"
    cd "$libsdir"
-   wget -O "$libsdir/php.tar.gz" https://www.php.net/distributions/php-8.5.8.tar.gz
+   wget -O "$libsdir/php.tar.gz" https://www.php.net/distributions/php-8.5.12.tar.gz
    wget -O "$libsdir/zlib.tar.gz" https://zlib.net/current/zlib.tar.gz
    wget -O "$libsdir/oniguruma.tar.gz" https://github.com/kkos/oniguruma/releases/download/v6.9.10/onig-6.9.10.tar.gz
    wget -O "$libsdir/icu.tgz" https://github.com/unicode-org/icu/releases/download/release-78.2/icu4c-78.2-sources.tgz
@@ -57,7 +57,7 @@ if [ "$down" = "true" ]; then
    wget -O "$libsdir/libevent.tar.gz" https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
    wget -O "$libsdir/glibc.tar.gz" https://ftp.gnu.org/gnu/libc/glibc-2.43.tar.gz
 
-   git clone https://github.com/MariaDB/server.git
+#   git clone https://github.com/MariaDB/server.git
    git clone https://github.com/ntop/ntopng.git
    cd ntopng
    git clone https://github.com/ntop/nDPI.git
@@ -216,8 +216,6 @@ if [ "$op" = "true" ]; then
 
     cd "$libsdir/sqlite-autoconf-3540000/"
 
-    export LIBS="-lm -lpthread -lgcc -lstdc++ -licutu -licuuc -licuio -licui18n -licudt78"
-
     ./configure --host=aarch64-linux-gnu \
                 --with-icu-ldflags="$ICU_LIBS" \
                 --with-icu-cflags="$ICU_CFLAGS" \
@@ -230,23 +228,23 @@ if [ "$op" = "true" ]; then
 
 fi
 
-     cd "$libsdir/server/"
+#     cd "$libsdir/server/"
 
-     mkdir -p /usr/bin/mariadb/bin
+#     mkdir -p /usr/bin/mariadb/bin
 
-     git submodule update --init --recursive
+#     git submodule update --init --recursive
 
-     cmake $PWD -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-                -DWITH_EMBEDDED_SERVER=ON \
-                -DCMAKE_INSTALL_PREFIX=/usr/bin/mariadb \
-                -DPLUGIN_ROCKSDB=NO \
-                -DCURL_INCLUDE_DIR="$libsdir/curl-8.20.0/include" \
-                -DCURL_LIBRARY="$libsdir/curl-8.20.0/lib" \
-                -DLDFLAGS="-lcurl"
+#     cmake $PWD -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+#                -DWITH_EMBEDDED_SERVER=ON \
+#                -DCMAKE_INSTALL_PREFIX=/usr/bin/mariadb \
+#                -DPLUGIN_ROCKSDB=NO \
+#                -DCURL_INCLUDE_DIR="$libsdir/curl-8.20.0/include" \
+#                -DCURL_LIBRARY="$libsdir/curl-8.20.0/lib" \
+#                -DLDFLAGS="-lcurl"
 
-     cmake --build $PWD --parallel $(nproc - 1)
+#     cmake --build $PWD --parallel $(nproc - 1)
 
-     cmake --install $PWD
+#     cmake --install $PWD
 
      cd "$libsdir/memcached-1.6.40"
 
@@ -288,7 +286,7 @@ fi
 
     export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/openssl-4.0.0/libcrypto.pc"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/libxml2"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/libxml2/include"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/sqlite-autoconf-3510100/sqlite3.pc"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/zlib-1.3.2/zlib.pc"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/onig-6.9.10/src"
@@ -303,8 +301,8 @@ fi
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/gettext-0.26"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$LIBSDIR/pth-2.0.7/include"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/include/glibc/lib/libc.so.6"
-    export LIBXML_CFLAGS="-I/usr/include/libxml2"
-    export LIBXML_LIBS="-L$LIBSDIR/libxml2-v2.15.3"
+    export LIBXML_CFLAGS="-I/usr/include/libxml2/include"
+    export LIBXML_LIBS="-L/usr/include/libxml2"
     export OPENSSL_CFLAGS="-I$LIBSDIR/openssl-4.0.0/include"
     export OPENSSL_LIBS="-L$LIBSDIR/openssl-4.0.0"
     export PHP_SQLITE_CFLAGS="-I$LIBSDIR/sqlite-autoconf-3540000/sqlite3.pc"
@@ -329,15 +327,15 @@ fi
     export GLIBC_CFLAGS="-I/usr/include/glibc/include"
     export ALL_CFLAGS="$LIBXML_CFLAGS $OPENSSL_CFLAGS $GNU_CFLAGS $ICU_CFLAGS $ONIG_CFLAGS $ZLIB_CFLAGS $INTL_CFLAGS $CURL_CFLAGS $SQLITE_CFLAGS $NTP_CFLAGS $GLIBC_CFLAGS"
     export LDFLAGS="$GLIBC_LIBS $GNU_PTH $LIBXML_LIBS $OPENSSL_LIBS $ICU_LIBS $ONIG_LIBS $ZLIB_LIBS $INTL_LIBS $CURL_LIBS $SQLITE_LIBS $NTP_LIBS"
-    export LIBS="-lgcc -lz -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap -licutu -licuuc -licuio -licui18n -licudt78 -lonig -lcurl"
+    export LIBS="-lgcc -lz -lpthread -lstdc++ -lxml2 -lsqlite3 -lpcap -licutu -licuuc -licuio -licui18n -lonig -lcurl $LDFLAGS"
     export LD_LIBRARY_PATH="/lib:/usr/lib:/usr/include:/usr/local/lib:/usr/local/include:/usr/bin:/bin:/usr/local/bin:$PKG_CONFIG_PATH"
-    export CFLAGS="-O2 -nostartfiles -std=c17 -std=gnu17 -pthread $ALL_CFLAGS"
+    export CFLAGS="-O3 -std=c17 -std=gnu17 -pthread"
     export ICU_CFLAGS="$CFLAGS"
-    export CXXFLAGS="-O3 -nostartfiles -std=c++17 -std=gnu++17 -pthread $ALL_CFLAGS"
+    export CXXFLAGS="-O3 -std=c++17 -std=gnu++17 -pthread"
     export ICU_CXXFLAGS="$CXXFLAGS"
     export CPPFLAGS=""
     export PHP_INTL_STDCXX="-std=gnu++17"
-    export PHP_INTL_CXX_FLAGS="$ICU_CXXFLAGS"
+    export PHP_INTL_CXX_FLAGS="$CXXFLAGS"
     export PATH="$PATH:$LD_LIBRARY_PATH"
     export CC="/usr/bin/aarch64-linux-gnu-gcc"
     export CXX="/usr/bin/aarch64-linux-gnu-gcc"
@@ -345,33 +343,9 @@ fi
     export LD="/usr/bin/aarch64-linux-gnu-ld"
     env
 
-    cd "$libsdir/php-8.5.8/"
+    cd "$libsdir/php-8.5.12/"
 
-    rm "$libsdir/php-8.5.8/conf.patch"
-
-    cat <<EOF >> "$libsdir/php-8.5.8/conf.patch"
---- ext/intl/config.m4  2026-08-06 20:03:55.432399564 +0200
-+++ ext/intl/config.m4  2026-08-06 19:40:33.312400567 +0200
-@@ -90,10 +90,10 @@
-   AC_MSG_CHECKING([if intl requires -std=gnu++17])
-   AS_IF([$PKG_CONFIG icu-uc --atleast-version=74],[
-     AC_MSG_RESULT([yes])
--    PHP_CXX_COMPILE_STDCXX([17], [mandatory], [PHP_INTL_STDCXX])
-+#    PHP_CXX_COMPILE_STDCXX([17], [mandatory], [PHP_INTL_STDCXX])
-   ],[
-     AC_MSG_RESULT([no])
--    PHP_CXX_COMPILE_STDCXX([11], [mandatory], [PHP_INTL_STDCXX])
-+#    PHP_CXX_COMPILE_STDCXX([11], [mandatory], [PHP_INTL_STDCXX])
-   ])
-
-   PHP_INTL_CXX_FLAGS="$INTL_COMMON_FLAGS $PHP_INTL_STDCXX $ICU_CXXFLAGS"
-EOF
-
-    patch -p0 < "$libsdir/php-8.5.8/conf.patch"
-
-    make clean
-
-    ./buildconf -f
+    ./buildconf
 
     ./configure --enable-fpm \
             --with-fpm-user=www-data \
