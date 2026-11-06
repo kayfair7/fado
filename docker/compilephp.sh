@@ -282,13 +282,6 @@ fi
 
      make install
 
-    export CFLAGS="-O3 -std=c17 -std=gnu17"
-    export ICU_CFLAGS=""
-    export CXXFLAGS="-O3 -std=c++17 -std=gnu++17"
-    export CPPFLAGS=""
-    export ICU_CXXFLAGS=""
-    export PHP_INTL_STDCXX="-std=c++17"
-    export PHP_INTL_CXX_FLAGS=""
     env
 
     cd "$libsdir/php-8.5.12/"
