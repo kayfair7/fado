@@ -162,7 +162,7 @@ INSERT INTO `fado_settings` (`id`, `name`, `value`, `changed`, `created`) VALUES
 (13,	'memcache_compressed',	'0',	NULL,	'2023-05-07 12:40:28'),
 (14,	'invoice_mode_available',	'[\"brutto\",\"netto\"]',	NULL,	'2023-05-07 12:40:28'),
 (15,	'map_tile_url',	'{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',	NULL,	'2023-05-07 12:40:28'),
-(16,	'map_route_url',	'router.project-osrm.org/route/v1',	NULL,	'2023-05-07 12:40:28'),
+(16,	'map_route_url',	'pk.eyJ1IjoiZmVyZGFrIiwiYSI6ImNtdnFoYXFicTA5czczNXBrcmltNHlwNDYifQ.arNxX9PABufxmt-BGe6NKg',	NULL,	'2023-05-07 12:40:28'),
 (17,	'rewrite_route',	'0',	NULL,	'2023-05-07 12:40:28'),
 (18,	'date_format_available',	'{\"en_GB\":\"%Y/%m/%d\",\"en_US\":\"%d-%m-%Y\",\"UTC\":\"%x\",\"UTC2\":\"%a, %d. %b %Y\",\"UTC3\":\"%A %d. %B %Y\",\"de_DE\":\"%d.%m.%Y\"}',	NULL,	'2023-05-07 12:40:28'),
 (19,	'maximum_login_attempts',	'5',	NULL,	'2023-05-07 12:40:28'),

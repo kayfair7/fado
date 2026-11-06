@@ -9,17 +9,10 @@
 
     ?>
 
-
-    <!-- Leaflet  Script + CSS -->
-    <link rel="stylesheet" href="<?php echo $view->getHostLink(); ?>/vendor/leaflet/leaflet.css">
-
-    <script src="<?php echo $view->getHostLink(); ?>/vendor/leaflet/leaflet.js"></script>
-
-    <script src="<?php echo $view->getHostLink(); ?>/vendor/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
-
-    <link rel="stylesheet" href="<?php echo $view->getHostLink(); ?>/vendor/leaflet-routing-machine/dist/leaflet-routing-machine.css">
-
-    <script src="<?php echo $view->getHostLink(); ?>/vendor/leaflet-routing-machine/examples/Control.Geocoder.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.2/mapbox-gl-directions.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.2/mapbox-gl-directions.css" type="text/css">
 
 </head>
 
@@ -76,76 +69,57 @@
 ?>
     <!-- /#wrapper -->
 
-    <script>
+<script>
 
-        var map = L.map('map', {
-            center: [51.505, -0.09],
-            zoom: 13
-        });
+const map = new mapboxgl.Map({
+    accessToken: '<?php echo \Fado\Model\Setting::get('map_route_url'); ?>',
+    container: 'map',
+    style: 'mapbox://styles/mapbox/standard',
+    center: [-79.4512, 43.6568],
+    zoom: 13
+});
 
-        L.tileLayer('<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_tile_url'); ?>', {
-            attribution: '',
-        }).addTo(map);
+var directions = new MapboxDirections({
+    accessToken: '<?php echo \Fado\Model\Setting::get('map_route_url'); ?>',
+    unit: 'metric',
+    profile: 'mapbox/driving'
+});
+map.addControl(directions);
 
-        var redIcon = L.icon({
-            iconUrl: '<?php echo $view->getHostLink(); ?>/vendor/leaflet/images/marker-icon-2x.png',
-            iconSize: [28, 50],
-            iconAnchor: [28, 50]
-        });
-
-        window.lrmConfig = {
-            serviceUrl: '<?php echo $view->getProtocol() . \Fado\Model\Setting::get('map_route_url'); ?>'
-//    serviceUrl: 'https://api.mapbox.com/directions/v5',
-//    profile: 'mapbox/driving',
-        };
-
-        var control = L.Routing.control(L.extend(window.lrmConfig, {
-            waypoints: [],
- //           router: L.Routing.mapbox(
- //             'pk.eyJ1IjoiZmVyZG'
- //       ),
-            geocoder: L.Control.Geocoder.nominatim(),
-            routeWhileDragging: true,
-            reverseWaypoints: true,
-            showAlternatives: true,
-            altLineOptions: {
-                styles: [
-                    {color: 'black', opacity: 0.15, weight: 9},
-                    {color: 'white', opacity: 0.8, weight: 6},
-                    {color: 'blue', opacity: 0.5, weight: 2}
-                ]
-            }
-        })).addTo(map);
-
-        L.Routing.errorControl(control).addTo(map);
-
-        function selectRoute() {
-           var waypoints = [];
-           $('.route-select option').each(function (i) {
-               if (this.selected) {
-                   waypoints.push(L.LatLng(this.dataset.lat, this.dataset.lng));
-               }
-           });
-           control.setWaypoints(waypoints);
-           control.route();
-           var linkSuffix = '?';
-           for (var i = 0; i < waypoints.length; i++) {
-               linkSuffix += waypoints[i].lat.toString() + ',' + waypoints[i].lng.toString();
-               if (i + 1 != waypoints.length) {
-                   linkSuffix += ';';
-               }
-           }
-           $('#pdflink').attr('href', $('#pdflink').attr('href') + linkSuffix);
-           $('#printlink').attr('href', $('#printlink').attr('href') + linkSuffix);
+function selectRoute() {
+   var waypoints = [];
+   $('.route-select option').each(function (i) {
+       if (this.selected) {
+           waypoints.push([parseFloat(this.dataset.lng), parseFloat(this.dataset.lat)]);
         }
+   });
+   for (var i = 0; i < waypoints.length; i++) {
+        if (i == 0) {
+            directions.setOrigin(waypoints[i]);
+        } else if (i < (waypoints.length - 1)) {
+            directions.addWaypoint(i - 1, waypoints[i]);
+        } else {
+            directions.setDestination(waypoints[i]);
+        }
+    }
+    var linkSuffix = '?';
+    for (var i = 0; i < waypoints.length; i++) {
+        linkSuffix += waypoints[i].lat.toString() + ',' + waypoints[i].lng.toString();
+        if (i + 1 != waypoints.length) {
+            linkSuffix += ';';
+        }
+     }
+     $('#pdflink').attr('href', $('#pdflink').attr('href') + linkSuffix);
+     $('#printlink').attr('href', $('#printlink').attr('href') + linkSuffix);
+}
 
-        selectRoute();
+selectRoute();
 
-        $('.route-select').on('change', function() {
-            selectRoute();
-        });
+$('.route-select').on('change', function() {
+     selectRoute();
+});
 
-     </script>
+</script>
 
 </body>
 
