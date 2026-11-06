@@ -57,9 +57,7 @@
                             <form id="itemform"  method="POST" action="<?php echo $view->getFullLink(); ?>">
 
                                 <div class="panel panel-warning">
-                                    <div class="panel-heading">
-                                        
-                                        <?php echo $view->translate('SETTINGS_MAP_SERVER'); ?>
+                                    <div class="panel-heading">                                        <?php echo $view->translate('SETTINGS_MAP_SERVER'); ?>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group <?php echo (isset($formMessages['map_tile_url'])) ? 'has-error' : ''; ?>">
@@ -81,7 +79,6 @@
 
                                 <div class="panel panel-info">
                                     <div class="panel-heading">
-                                        
                                         <?php echo $view->translate('SETTINGS_COOKIE'); ?>
                                     </div>
                                     <div class="panel-body">

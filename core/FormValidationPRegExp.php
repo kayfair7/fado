@@ -42,7 +42,7 @@ define('VALIDATION_REGEX_ARRAY_SETTING_DATA_FIELDS', array(
     'memcache_port' => array('/^[0-9]{1,5}$/', true, 'ERROR_FIELD_ONLY_NUMBERS'),
     'memcache_host' => array('/(^((http|https):\/\/){1}(www.|[a-zA-Z0-9{}]+.)[a-z0-9-{}\.]+.[a-z]{2,3}(\/[a-zA-Z0-9{}.-\\?]+)*$|^((http|https):\/\/){0,1}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$|^((http|https):\/\/){0,1}localhost$)/', true, 'ERROR_FIELD_INVALID'),
     'map_tile_url' => array('/(^(www.|[a-zA-Z0-9{}]+.)[a-z0-9-{}\.]+.[a-z]{2,3}(\/[a-zA-Z0-9{}.-\\?]+)*$|^((http|https):\/\/){1}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}(\/[a-zA-Z0-9{}.-\\?]+)*$|^((http|https):\/\/){1}localhost(\/[a-zA-Z0-9{}.-\\?]+)*$)/', true, 'ERROR_FIELD_INVALID'),
-    'map_route_url' => array('/(^(www.|[a-zA-Z0-9{}]+.)[a-z0-9-{}\.]+.[a-z]{2,3}(\/[a-zA-Z0-9{}.-\\?]+)*$|^((http|https):\/\/){1}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}(\/[a-zA-Z0-9{}.-\\?]+)*$|^((http|https):\/\/){1}localhost(\/[a-zA-Z0-9{}.-\\?]+)*$)/', true, 'ERROR_FIELD_INVALID')
+    'map_route_url' => array('/[a-zA-Z0-9\.]+/', true, 'ERROR_FIELD_INVALID')
 ));
 
 define('VALIDATION_REGEX_ARRAY_SHOP_DATA_FIELDS', array(
