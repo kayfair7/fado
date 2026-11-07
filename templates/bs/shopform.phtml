@@ -92,7 +92,7 @@ if ($activeShop == null || empty($activeShop) && empty($formMessages)) {
         </div>
         <div class="form-group">
             <label><?php echo $view->translate('SHOPS_LABEL_INFORMATION'); ?></label>
-            <textarea class="ckeditor" cols="80" id="<?php echo (!$openNewShop) ? 'editor-1' : 'editor-new'; ?>" name="<?php echo (!$openNewShop) ? 'editor-1' : 'editor-new'; ?>" rows="10">
+            <textarea class="editorj" cols="80" id="<?php echo (!$openNewShop) ? 'editor-1' : 'editor-new'; ?>" name="<?php echo (!$openNewShop) ? 'editor-1' : 'editor-new'; ?>" rows="10">
                 <?php echo $view->decodeHtmlEntities(json_decode($activeShop['information'])); ?>
             </textarea>
         </div>

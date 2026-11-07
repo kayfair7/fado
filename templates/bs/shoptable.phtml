@@ -33,13 +33,13 @@ $currentItemsPerPage = $shops->getItemsPerPage();
                                             $formattedRange = $view->formatDateTime('2017-01-' . ($openingHours[$key]['start'] + 2), '%a');
                                         }
                                         ?>
-                                <b><?php echo '' . $formattedRange; ?></b>
-                                <?php echo $view->formatTime($openingHours[$key]['open']) . '&nbsp;-&nbsp;' .  $view->formatTime($openingHours[$key]['close']); ?>
+                                <span class="digital7"><b><?php echo '' . $formattedRange; ?></b>
+                                <?php echo $view->formatTime($openingHours[$key]['open']) . '&nbsp;-&nbsp;' .  $view->formatTime($openingHours[$key]['close']); ?></span>
                                 <?php
                                     }
                                 ?>
                             </td>
-                            <td class="center"><?php echo $view->formatDate($shop['established']); ?></td>
+                            <td class="center"><span class="digital7"><?php echo $view->formatDate($shop['established']); ?></span></td>
                             <td class="center"><span class="digital7"><?php echo $view->DDtoDMS($shop['lng'], 'lng') . ' ' . $view->DDtoDMS($shop['lat'], 'lat'); ?></span></td>
                         </tr>
             <?php
