@@ -48,6 +48,8 @@ locale-gen ru_RU.UTF-8
 locale-gen ru_RU
 locale-gen it_IT.UTF-8
 locale-gen it_IT
+locale-gen zh_CN.UTF-8
+locale-gen zh_CN
 localedef -f UTF-8 -i tr_TR tr_TR.utf8
 localedef -f UTF-8 -i de_DE de_DE.utf8
 localedef -f UTF-8 -i en_GB en_GB.utf8
@@ -59,6 +61,7 @@ localedef -f UTF-8 -i iw_IL iw_IL.utf8
 localedef -f UTF-8 -i ar_AR ar_AR.utf8
 localedef -f UTF-8 -i ru_RU ru_RU.utf8
 localedef -f UTF-8 -i it_IT it_IT.utf8
+localedef -f UTF-8 -i zh_CN zh_CN.utf8
 update-locale
 locale -a
 

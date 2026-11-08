@@ -57,7 +57,7 @@ Move file to `/etc/fado/database.csv`. Edit `core/Loader.php`:
     define('DB_CONFIG_FILE', '/etc/fado/database.csv');
 
 ## Languages
-English, German, Spanish, Italian, Dutch, Turkish, Farsi, Jewish, Russian, French, Arabic
+English, German, Spanish, Italian, Dutch, Turkish, Farsi, Jewish, Russian, French, Arabic, Chinese
 
 ## License
 [GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.en.html) © 2017-2026 Fatih Kaymak
