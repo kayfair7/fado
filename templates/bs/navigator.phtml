@@ -75,8 +75,21 @@ const map = new mapboxgl.Map({
     accessToken: '<?php echo \Fado\Model\Setting::get('map_route_url'); ?>',
     container: 'map',
     style: 'mapbox://styles/mapbox/standard',
-    center: [-79.4512, 43.6568],
-    zoom: 13
+    config: {
+        basemap: {
+            lightPreset: "dawn",
+            colorRoads: "#ffe600",
+            font: "Open Sans",
+            show3dTrees: false,
+            showLandmarkIcons: true,
+            showHdRoads: true,
+            colorHdRoads: "#ffcc00"
+        }
+    },
+    center: [51.509865, -0.118092],
+    zoom: 12,
+    bearing: 0.00,
+    pitch: 0.00,
 });
 
 var directions = new MapboxDirections({
