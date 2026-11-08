@@ -50,6 +50,8 @@ echo "/dev            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fsta
 echo "/dev/shm            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fstab
 mount -t devtmpfs devtmpfs /dev
 mount -t devtmpfs devtmpfs /dev/shm
+unlink /lib/modules/15
+ln -s /lib/modules/4.20.17 /lib/modules/15
 
 echo "Start & prepare MariaDB"
 
