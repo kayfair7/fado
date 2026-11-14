@@ -2,26 +2,15 @@
 
 cd /var/www/html
 
-if [ -f /var/www/isdeployed ]; then
-    dpkg-statoverride --remove "/etc/ssl/private"
-    dpkg-statoverride --remove "/usr/lib/dbus-1.0/dbus-daemon-launch-helper"
-    dpkg-statoverride --remove "/usr/bin/crontab"
-    dpkg-statoverride --remove "/etc/exim4/passwd.client"
-    dpkg-reconfigure --force mariadb-server
-    dpkg-reconfigure --force memcached
-    service apache2 restart
-    service mariadb restart
-    service php8.4-fpm restart
-    service memcached restart
-    service --status-all
-    tail -f /var/log/apache2/other_vhosts_access.log
-fi
-
 echo "Download & install packages"
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
+dpkg-statoverride --remove "/etc/ssl/private"
+dpkg-statoverride --remove "/usr/lib/dbus-1.0/dbus-daemon-launch-helper"
+dpkg-statoverride --remove "/usr/bin/crontab"
+dpkg-statoverride --remove "/etc/exim4/passwd.client"
 apt-get update && apt-get upgrade -y
-apt-get install -y apache2 php8.4 php8.4-fpm php8.4-intl php8.4-mysql php8.4-mbstring php8.4-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached locales nano
+apt-get install -y apache2 php php-fpm php-intl php-mysql php-mbstring php-cli mariadb-client mariadb-common mariadb-server php-mariadb-mysql-kbs php-memcache php-memcached memcached locales nano curl
 
 echo "Compile locales"
 
@@ -101,7 +90,10 @@ rm /etc/apache2/sites-available/*
 rm /etc/apache2/sites-enabled/*
 rm -r /var/apache2
 mkdir /var/apache2
+sed -i -e 's/listen = \/run\/php\/php8.5-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php/8.5/fpm/pool.d/www.conf
+sed -i -e 's/listen = \/run\/php\/php8.4-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php/8.4/fpm/pool.d/www.conf
 sed -i -e 's/Listen 80/Listen 2080/g' /etc/apache2/ports.conf
+sed -i -e 's/Listen 443/Listen 2443/g' /etc/apache2/ports.conf
 echo "Mutex file:/var/apache2" >> /etc/apache2/apache2.conf
 
 cat <<EOF >> /etc/apache2/sites-available/fado.conf
@@ -127,7 +119,7 @@ ServerName fado.org
             <IfModule mod_rewrite.c>
                 RewriteEngine on
                 RewriteCond "%{HTTPS}" !=on
-                RewriteRule "^/(.*)" "https://%{SERVER_NAME}/\$1" [L,R=301]
+                RewriteRule "^/?(.*)" "https://%{SERVER_NAME}/\$1" [L,R=301]
             </IfModule>
         </IfModule>
 
@@ -138,6 +130,13 @@ ServerName fado.org
             RewriteRule "^/(.+)/\$" "/index.php?page=\$1" [L,QSA]
         </IfModule>
 
+        <IfModule mod_proxy_fcgi.c>
+            <FilesMatch "\.(php|phtml)\$">
+                SetHandler application/x-httpd-php
+                SetHandler "proxy:fcgi://localhost:9000/"
+            </FilesMatch>
+        </IfModule>
+
         <FilesMatch "\.(htaccess|csv|md|yml|sql|sh|log|conf|gz)\$">
             Require all denied
         </FilesMatch>
@@ -146,7 +145,7 @@ ServerName fado.org
         ErrorDocument 403 /index.php?page=403
 </VirtualHost>
 <IfModule mod_ssl.c>
-    <VirtualHost _default_:443>
+    <VirtualHost _default_:2443>
         ServerAdmin admin@fado.org
         DocumentRoot /var/www/html/
         ServerName fado.org
@@ -166,6 +165,13 @@ ServerName fado.org
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
             RewriteRule "^/(.+)/\$" "/index.php?page=\$1" [L,QSA]
+        </IfModule>
+
+        <IfModule mod_proxy_fcgi.c>
+            <FilesMatch "\.(php|phtml)\$">
+                SetHandler application/x-httpd-php
+                SetHandler "proxy:fcgi://localhost:9000/"
+            </FilesMatch>
         </IfModule>
 
         SSLEngine on
@@ -190,16 +196,8 @@ ln -s /etc/apache2/sites-available/fado.conf /etc/apache2/sites-enabled/fado.con
 /usr/sbin/a2enmod headers
 #/usr/sbin/a2enmod ssl
 /usr/sbin/a2enmod proxy_fcgi setenvif
+/usr/sbin/a2enconf php8.5-fpm
 /usr/sbin/a2enconf php8.4-fpm
-
-service apache2 restart
-service mariadb restart
-service php8.4-fpm restart
-
-echo "Start memcached RAM"
-service memcached restart
-service --status-all
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
-tail -f /var/log/apache2/other_vhosts_access.log

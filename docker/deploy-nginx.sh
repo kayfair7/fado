@@ -5,26 +5,15 @@
 
 cd /var/www/html
 
-if [ -f /var/www/isdeployed ]; then
-    dpkg-statoverride --remove "/etc/ssl/private"
-    dpkg-statoverride --remove "/usr/lib/dbus-1.0/dbus-daemon-launch-helper"
-    dpkg-statoverride --remove "/usr/bin/crontab"
-    dpkg-statoverride --remove "/etc/exim4/passwd.client"
-    dpkg-reconfigure --force mariadb-server
-    dpkg-reconfigure --force php8.4-fpm
-    service nginx restart
-    service mariadb restart
-    service php8.4-fpm restart
-    service memcached restart
-    service --status-all
-    tail -f /var/log/nginx/access.log
-fi
-
 adduser --disabled-password --no-create-home --verbose --quiet memcache
 
 echo "Download & install packages"
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
+dpkg-statoverride --remove "/etc/ssl/private"
+dpkg-statoverride --remove "/usr/lib/dbus-1.0/dbus-daemon-launch-helper"
+dpkg-statoverride --remove "/usr/bin/crontab"
+dpkg-statoverride --remove "/etc/exim4/passwd.client"
 apt-get update && apt-get upgrade -y
 apt-get install -y nginx-full libnginx-mod-http-memc libnginx-mod-http-set-misc libnginx-mod-http-headers-more-filter php php-pdo-mysql php-intl php-mbstring php-mysql php-memcache php-fpm mariadb-server memcached nginx-snippets lua-nginx-memcached php-xml locales
 
@@ -101,7 +90,8 @@ cat <<EOF >> "$PWD/.htaccess"
 
 EOF
 
-touch /run/php/php8.4-fpm.sock
+sed -i -e 's/listen = \/run\/php\/php8.5-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php/8.5/fpm/pool.d/www.conf
+sed -i -e 's/listen = \/run\/php\/php8.4-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php/8.4/fpm/pool.d/www.conf
 rm /etc/nginx/sites-available/default
 unlink /etc/nginx/sites-enabled/default
 
@@ -128,7 +118,7 @@ server {
 
     location ~ \.(php|phtml)\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+        fastcgi_pass fcgi:localhost:9000;
     }
 
     location ~ \.(htaccess|csv|md|sql|sh|yml|conf|gz)\$ {
@@ -140,15 +130,5 @@ EOF
 
 ln -s /etc/nginx/sites-available/fado.org /etc/nginx/sites-enabled/fado.org
 
-
-service nginx restart
-service mariadb restart
-service php8.4-fpm restart
-
-echo "Start memcached RAM"
-service memcached restart
-service --status-all
-
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
-tail -f /var/log/nginx/access.log

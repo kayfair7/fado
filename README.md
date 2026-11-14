@@ -26,7 +26,7 @@ Compatible with Android and Termux App.
     pkg add git proot proot-distro
     git clone https://gitlab.com/ferdak/fado.git
     proot-distro install debian:latest
-    proot-distro run -b "/data/data/com.termux/files/home/fado:/var/www/html" debian -- /bin/bash /var/www/html/docker/deploy-forky.sh
+    proot-distro run -b "/data/data/com.termux/files/home/fado:/var/www/html" debian -- /bin/bash /var/www/html/docker/start.sh
 
 ## User
 Open <http://127.0.0.1:2080> and login as superuser `fado` with password `rood`.

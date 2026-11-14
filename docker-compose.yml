@@ -3,8 +3,8 @@
 #
 services:
   fado-srv:
-    image: debian:trixie
-    command: "/bin/bash /var/www/html/docker/deploy-forky.sh"
+    image: debian:latest
+    command: "/bin/bash /var/www/html/docker/start.sh"
     user: root
     environment:
       ROOT: "/var/www/html"
