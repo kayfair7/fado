@@ -1,26 +1,20 @@
 #!/bin/bash
 wcll () {
     i=0
-    y=""
-    z=""
     for s in $( ls -x "$1" )
     do
         y=$( stat "$1/$s" | grep "regular file" )
         z=$( stat "$1/$s" | grep "directory" )
         if [ "$z" != ""  ]; then
-           k=$( wcll "$1/$s")
-           i=$(( $i + $k ))
+            m=$( wcll "$1/$s")
         elif [ "$y" != "" ]; then
-            x=$( wc -l "$1/$s" | grep -o -E "[0-9]+[[:space:]]" | grep -o -E "[0-9]+" | xargs expr )
-            if [ "$x" != "" ]; then
-                i=$(( $i + $x ))
-            fi
+            m=$( wc -l "$1/$s" | grep -o -E "[0-9]+[[:space:]]" | grep -o -E "[0-9]+" )
         fi
+        i=$(( $i + $m ))
     done
     echo "$i"
-    return 0;
+    return 0
 }
-l=$(wcll "$PWD" | xargs expr)
-echo "line count is "
-echo $l
+l=$(wcll "$PWD")
+echo "line count is $l"
 exit 0
