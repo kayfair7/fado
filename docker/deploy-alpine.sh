@@ -17,22 +17,18 @@ fi
 echo "Download & install packages"
 echo "nameserver 74.82.42.42" > /etc/resolv.conf
 echo "fado-srv" > /etc/hostname
-apk add nano openrc apache2 php php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-overlay s6-portable-utils util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd ncurses ca-certificates runit gcompat bash-completion android-tools-bash-completion linux-headers
+apk add nano openrc apache2 php php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 apache2-http2
 adduser -D apache
 adduser -D memcached
 adduser -D mariadb
 adduser -D mysql
-adduser -D fcgiwrap
-adduser -D rngd
-adduser -D messagebus
 chown -Rvf apache:apache /var/www/localhost/htdocs
 chmod -Rvf 770 /var/www/localhost/htdocs
 chmod -Rvf 770 /var
 chmod -Rvf 777 /tmp
-unlink /lib/modules/15
-ln -s /lib/modules/4.20.17 /lib/modules/15
 echo 'rc_need="!dev !net"' >> /etc/rc.conf
 sed -i -e "s/skip-networking/#skip-networking/g" /etc/my.cnf.d/mariadb-server.cnf
+touch /run/openrc/softlevel
 
 echo "Start & prepare MariaDB"
 
