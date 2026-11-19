@@ -3,21 +3,7 @@
 #
 # proot-distro run -b "/data/data/com.termux/files/home/fado:/var/www/localhost/htdocs" alpine -- /bin/busybox sh /var/www/localhost/htdocs/docker/deploy-alpine.sh
 
-echo "nameserver 74.82.42.42" > /etc/resolv.conf
-echo "fado-srv" > /etc/hostname
-export XDG_RUNTIME_DIR=/run/$(id -u)
-mkdir -p /run/openrc
-touch /run/openrc/softlevel
-mkdir -p "$XDG_RUNTIME_DIR/openrc/"
-touch "$XDG_RUNTIME_DIR/openrc/softlevel"
-adduser -D apache
-adduser -D memcached
-adduser -D mariadb
-adduser -D mysql
-adduser -D fcgiwrap
-adduser -D rngd
-adduser -D messagebus
-cd /var/www/localhost
+cd /var/www/localhost/htdocs
 
 if [ -f /var/www/isdeployed ]; then
     mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
@@ -29,28 +15,29 @@ if [ -f /var/www/isdeployed ]; then
 fi
 
 echo "Download & install packages"
-
+echo "nameserver 74.82.42.42" > /etc/resolv.conf
+echo "fado-srv" > /etc/hostname
 apk add nano openrc apache2 php php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-overlay s6-portable-utils util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd ncurses ca-certificates runit gcompat bash-completion android-tools-bash-completion linux-headers
-
+adduser -D apache
+adduser -D memcached
+adduser -D mariadb
+adduser -D mysql
+adduser -D fcgiwrap
+adduser -D rngd
+adduser -D messagebus
 chown -Rvf apache:apache /var/www/localhost/htdocs
 chmod -Rvf 770 /var/www/localhost/htdocs
 chmod -Rvf 770 /var
 chmod -Rvf 777 /tmp
-#sed -i -e 's/# skip_mount_dev="NO"/skip_mount_dev="YES"/g' /etc/conf.d/devfs
-echo "/dev            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fstab
-echo "/dev/shm            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fstab
-mount -t devtmpfs devtmpfs /dev
-mount -t devtmpfs devtmpfs /dev/shm
-chmod -R 777 /dev/shm
 unlink /lib/modules/15
 ln -s /lib/modules/4.20.17 /lib/modules/15
 echo 'rc_need="!dev !net"' >> /etc/rc.conf
 sed -i -e "s/skip-networking/#skip-networking/g" /etc/my.cnf.d/mariadb-server.cnf
+
 echo "Start & prepare MariaDB"
 
-mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
-/etc/init.d/mariadb -U setup
-/etc/init.d/mariadb -U start
+/etc/init.d/mariadb setup
+/etc/init.d/mariadb start
 
 mariadb -u root -e "CREATE USER IF NOT EXISTS fado@localhost IDENTIFIED BY 'rood';"
 mariadb -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'fado'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
@@ -85,7 +72,10 @@ sed -i -e 's/# Mutex default:\/run\/apache2/Mutex file:\/run\/apache2/g' /etc/ap
 sed -i -e 's/Listen 80/Listen 2080/g' /etc/apache2/httpd.conf
 mv /etc/apache2/conf.d/proxy.conf /etc/apache2/conf.d/proxy.conf.old
 mv /etc/apache2/conf.d/mod_fcgid.conf /etc/apache2/conf.d/mod_fcgid.conf.old
+mv /etc/apache2/conf.d/http2.conf /etc/apache2/conf.d/http2.conf.old
+mv /etc/apache2/conf.d/ssl.conf /etc/apache2/conf.d/ssl.conf.old
 rm /etc/apache2/conf.d/fado.conf
+rm /var/www/localhost/htdocs/index.html
 
 cat <<EOF >> /etc/apache2/conf.d/fado.conf
 DirectoryIndex index.php index.html
@@ -166,14 +156,10 @@ ServerName fado.org
 </IfModule>
 EOF
 
-rm /var/www/localhost/htdocs/index.html
-rm /etc/apache2/conf.d/ssl.conf
-#rm /etc/apache2/conf.d/http2.conf
-
 /etc/init.d/apache2 restart
 /etc/init.d/memcached restart
 rc-status
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
-tail -f /var/log/apache2/access.log
+#tail -f /var/log/apache2/access.log
