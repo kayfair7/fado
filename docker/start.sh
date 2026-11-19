@@ -1,7 +1,7 @@
 #/bin/bash
 
 if [ ! -f /var/www/isdeployed ]; then
-    /bin/bash /var/www/html/docker/deploy-forky.sh
+    /bin/bash /var/www/html/docker/deploy-debian.sh
 fi
 
 service apache2 restart
