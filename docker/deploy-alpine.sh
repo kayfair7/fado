@@ -1,10 +1,6 @@
 #!/bin/bash
 #
 #
-# tar xvfz ~/proc.tar.gz
-# udocker run --platform="linux/arm64/v8" --volume="/data/data/com.termux/files/home/fado/:/var/www/localhost/htdocs" --nosysdirs --volume="/data/data/com.termux/files/home/proc:/proc" --volume=/dev --volume=/sys alpine:latest /bin/busybox sh
-# busybox sh /var/www/localhost/htdocs/docker/deploy-alpine.sh
-#
 # proot-distro run -b "/data/data/com.termux/files/home/fado:/var/www/localhost/htdocs" alpine -- /bin/busybox sh /var/www/localhost/htdocs/docker/deploy-alpine.sh
 
 echo "nameserver 74.82.42.42" > /etc/resolv.conf
@@ -24,22 +20,17 @@ adduser -D messagebus
 cd /var/www/localhost
 
 if [ -f /var/www/isdeployed ]; then
-    mount -t  devtmpfs devtmpfs /dev
-    mount -t  devtmpfs devtmpfs /dev/shm
     mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
-    /etc/init.d/networking -U restart
-    /etc/init.d/fcgiwrap -U restart
-    /etc/init.d/apache2 -U restart
-    /etc/init.d/php-fpm85 -U restart
-    /etc/init.d/memcached -U restart
-    /etc/init.d/mariadb -U restart
-    rc-status -U
+    /etc/init.d/apache2 restart
+    /etc/init.d/memcached restart
+    /etc/init.d/mariadb restart
+    rc-status
     tail -f /var/log/apache2/access.log
 fi
 
 echo "Download & install packages"
 
-apk add nano openrc apache2 php php-fpm php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-helpers s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd ncurses ca-certificates runit gcompat bash-completion android-tools-bash-completion linux-headers linux-stable
+apk add nano openrc apache2 php php-intl php-pdo_mysql php-mbstring php-cli mariadb php-memcache memcached musl-locales icu-data-full mariadb-common mariadb-openrc mariadb-connector-c mariadb-client mariadb-server-utils apache2-ssl apache2-proxy apache2-openrc apache-mod-fcgid php85-apache2 php85-sysvshm php85-sysvmsg php85-sysvsem apache2-utils fcgi fcgiwrap fcgiwrap-openrc spawn-fcgi spawn-fcgi-openrc util-linux-openrc apache2-http2 udev-init-scripts-openrc akms openrc-init openrc-settingsd openrc-settingsd-openrc openrc-user openrc-user-pam dbus dbus-openrc dbus-libs dbus-glib dbus-daemon-launch-helper rng-tools rng-tools-openrc s6 s6-ipcserver s6-openrc s6-overlay s6-portable-utils util-linux-misc s6-ipcserver s6-openrc s6-rc s6-networking s6-linux-utils s6-overlay s6-portable-utils s6-dns s6-static s6-rc-static s6-overlay-syslogd util-linux-misc iptables-openrc iptables alpine-conf net-tools haveged alsa-tools device-mapper openrc-settingsd sc-controller-udev eudev udev-init-scripts-openrc eudev-openrc eudev-netifnames openntpd libnfnetlink mdevd ncurses ca-certificates runit gcompat bash-completion android-tools-bash-completion linux-headers
 
 chown -Rvf apache:apache /var/www/localhost/htdocs
 chmod -Rvf 770 /var/www/localhost/htdocs
@@ -50,9 +41,11 @@ echo "/dev            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fsta
 echo "/dev/shm            /dev            devtmpfs noauto,nodev,rw 0 0" >> /etc/fstab
 mount -t devtmpfs devtmpfs /dev
 mount -t devtmpfs devtmpfs /dev/shm
+chmod -R 777 /dev/shm
 unlink /lib/modules/15
 ln -s /lib/modules/4.20.17 /lib/modules/15
-
+echo 'rc_need="!dev !net"' >> /etc/rc.conf
+sed -i -e "s/skip-networking/#skip-networking/g" /etc/my.cnf.d/mariadb-server.cnf
 echo "Start & prepare MariaDB"
 
 mv /var/lib/mysql/aria_log_control /var/lib/mysql/aria_log_control.orig
@@ -90,22 +83,14 @@ sed -i -e 's/LoadModule mpm_event_module/#LoadModule mpm_event_module/g' /etc/ap
 sed -i -e 's/#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/g' /etc/apache2/httpd.conf
 sed -i -e 's/# Mutex default:\/run\/apache2/Mutex file:\/run\/apache2/g' /etc/apache2/httpd.conf
 sed -i -e 's/Listen 80/Listen 2080/g' /etc/apache2/httpd.conf
-
-mkdir /run/mod_fcgid/
-touch /run/mod_fcgid/fcgid.sock
-touch /run/mod_fcgid/shm.run
-echo 1 > /run/mod_fcgid/fcgid.sock
-
+mv /etc/apache2/conf.d/proxy.conf /etc/apache2/conf.d/proxy.conf.old
+mv /etc/apache2/conf.d/mod_fcgid.conf /etc/apache2/conf.d/mod_fcgid.conf.old
 rm /etc/apache2/conf.d/fado.conf
 
 cat <<EOF >> /etc/apache2/conf.d/fado.conf
 DirectoryIndex index.php index.html
 LoadModule php_module modules/mod_php85.so
 ServerName fado.org
-
-FcgidIPCDir /run/mod_fcgid/fcgid.sock
-FcgidProcessTableFile /run/mod_fcgid/shm.run
-SharememPath /dev/shm
 
 <VirtualHost _default_:2080>
         ServerAdmin admin@fado.org
@@ -114,9 +99,6 @@ SharememPath /dev/shm
 
         <FilesMatch "\.(php|phtml)\$">
             SetHandler application/x-httpd-php
-            SetHandler "proxy:fcgi://127.0.0.1:9000"
-            Allow from all
-            FcgidWrapper "/usr/bin/fcgiwrap" .php
         </FilesMatch>
 
         <IfModule mod_headers.c>
@@ -155,9 +137,6 @@ SharememPath /dev/shm
 
         <FilesMatch "\.(php|phtml)\$">
             SetHandler application/x-httpd-php
-            SetHandler "proxy:fcgi://127.0.0.1:9000"
-            Allow from all
-            FcgidWrapper "/usr/bin/fcgiwrap" .php
         </FilesMatch>
 
         <IfModule mod_headers.c>
@@ -191,14 +170,9 @@ rm /var/www/localhost/htdocs/index.html
 rm /etc/apache2/conf.d/ssl.conf
 #rm /etc/apache2/conf.d/http2.conf
 
-/etc/init.d/firstart -U restart
-/etc/init.d/modules -U restart
-/etc/init.d/networking -U restart
-/etc/init.d/fcgiwrap -U restart
-/etc/init.d/apache2 -U restart
-/etc/init.d/php-fpm85 -U restart
-/etc/init.d/memcached -U restart
-rc-status -U
+/etc/init.d/apache2 restart
+/etc/init.d/memcached restart
+rc-status
 
 touch /var/www/isdeployed
 echo "true" > /var/www/isdeployed
